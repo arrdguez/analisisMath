@@ -19,12 +19,26 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')           # sin ventana, guarda a archivo
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 BASE    = os.path.dirname(__file__)
 RESULTS = os.path.join(BASE, 'results')
+
+# ── paleta legible (fondo blanco) ────────────────────────────────────────────
+BG_FIG  = 'white'
+BG_AX   = '#f7f9fc'
+C_ZERO  = '#888888'
+COLORS  = {
+    'dist_p10':  '#1565c0',   # azul oscuro
+    'dist_p55':  '#e65100',   # naranja oscuro
+    'dist_p200': '#2e7d32',   # verde oscuro
+    'dist_10_55':  '#6a1b9a', # morado
+    'dist_55_200': '#c62828', # rojo oscuro
+    'ratio':     '#f57f17',   # ámbar
+    'precio':    '#37474f',   # gris oscuro
+}
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -40,6 +54,22 @@ def timeframe_label(filename: str) -> str:
         if tf in name:
             return tf
     return 'UNK'
+
+
+def estilo_ax(ax, xlabel='', ylabel='', title=''):
+    """Aplica estilo uniforme legible a un eje."""
+    ax.set_facecolor(BG_AX)
+    ax.tick_params(labelsize=8, colors='#222222')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    for spine in ax.spines.values():
+        spine.set_color('#cccccc')
+    if xlabel:
+        ax.set_xlabel(xlabel, fontsize=9, color='#333333')
+    if ylabel:
+        ax.set_ylabel(ylabel, fontsize=9, color='#333333')
+    if title:
+        ax.set_title(title, fontsize=10, color='#111111', fontweight='bold', pad=6)
 
 
 def stats_block(df: pd.DataFrame, col: str) -> str:
@@ -58,116 +88,128 @@ def stats_block(df: pd.DataFrame, col: str) -> str:
 # ── gráfica 1: distancias precio → EMAs ──────────────────────────────────────
 
 def plot_distancias(df: pd.DataFrame, tf: str):
-    fig = plt.figure(figsize=(18, 10))
-    fig.suptitle(f'Distancias Precio → EMAs  [{tf}]', fontsize=14, fontweight='bold')
-    gs  = gridspec.GridSpec(4, 2, figure=fig, hspace=0.45, wspace=0.3)
+    fig = plt.figure(figsize=(18, 12), facecolor=BG_FIG)
+    fig.suptitle(f'Distancias Precio → EMAs  [{tf}]',
+                 fontsize=14, fontweight='bold', color='#111111', y=0.98)
+    gs = gridspec.GridSpec(4, 2, figure=fig, hspace=0.55, wspace=0.35)
 
     cols_dist = [
-        ('dist_p10',  'EMA10',  '#4fc3f7'),
-        ('dist_p55',  'EMA55',  '#fff176'),
-        ('dist_p200', 'EMA200', '#ef9a9a'),
+        ('dist_p10',  'EMA10',  COLORS['dist_p10']),
+        ('dist_p55',  'EMA55',  COLORS['dist_p55']),
+        ('dist_p200', 'EMA200', COLORS['dist_p200']),
     ]
 
-    # — Serie temporal de cada distancia (columna izquierda) —
+    # — Serie temporal (columna izquierda) —
     for i, (col, label, color) in enumerate(cols_dist):
         ax = fig.add_subplot(gs[i, 0])
-        ax.plot(df['date'], df[col], color=color, linewidth=0.7, alpha=0.9)
-        ax.axhline(0, color='white', linewidth=0.5, linestyle='--')
+        ax.plot(df['date'], df[col], color=color, linewidth=0.8, alpha=0.9,
+                label=col)
+        ax.axhline(0, color=C_ZERO, linewidth=0.8, linestyle='--', label='0%')
         ax.fill_between(df['date'], df[col], 0,
-                        where=df[col] > 0, alpha=0.15, color='lime')
+                        where=df[col] > 0, alpha=0.18, color=color)
         ax.fill_between(df['date'], df[col], 0,
-                        where=df[col] < 0, alpha=0.15, color='red')
-        ax.set_ylabel(f'% vs {label}', fontsize=8)
-        ax.set_title(f'Precio vs {label}', fontsize=9)
-        ax.tick_params(labelsize=7)
-        ax.set_facecolor('#1a1a2e')
-        fig.patch.set_facecolor('#0f0f1a')
+                        where=df[col] < 0, alpha=0.18, color='#e53935')
+        ax.legend(fontsize=7, loc='upper left')
+        estilo_ax(ax,
+                  xlabel='Fecha',
+                  ylabel='Distancia (%)',
+                  title=f'Precio vs {label} — dist_{col[-3:]}')
 
     # — Histogramas (columna derecha) —
     for i, (col, label, color) in enumerate(cols_dist):
         ax = fig.add_subplot(gs[i, 1])
         data = df[col].dropna()
-        ax.hist(data, bins=80, color=color, alpha=0.8, edgecolor='none')
-        ax.axvline(0,           color='white', linewidth=1, linestyle='--')
-        ax.axvline(data.median(),color='cyan',  linewidth=1, linestyle=':',
-                   label=f'mediana {data.median():+.1f}%')
-        # percentiles 5 y 95
+        ax.hist(data, bins=80, color=color, alpha=0.75, edgecolor='none',
+                label=f'n={len(data)}')
+        ax.axvline(0, color=C_ZERO, linewidth=1, linestyle='--', label='0%')
+        med = data.median()
         p5, p95 = np.percentile(data, [5, 95])
-        ax.axvline(p5,  color='orange', linewidth=0.8, linestyle=':',
+        ax.axvline(med, color='#111111', linewidth=1.2, linestyle='-',
+                   label=f'mediana={med:+.1f}%')
+        ax.axvline(p5,  color='#e53935', linewidth=0.9, linestyle=':',
                    label=f'p5={p5:+.1f}%')
-        ax.axvline(p95, color='orange', linewidth=0.8, linestyle=':',
+        ax.axvline(p95, color='#1565c0', linewidth=0.9, linestyle=':',
                    label=f'p95={p95:+.1f}%')
-        ax.legend(fontsize=6)
-        ax.set_title(f'Histograma {label}', fontsize=9)
-        ax.tick_params(labelsize=7)
-        ax.set_facecolor('#1a1a2e')
+        ax.legend(fontsize=6, ncol=2)
+        estilo_ax(ax,
+                  xlabel=f'dist_{col[-3:]} (%)',
+                  ylabel='Número de días',
+                  title=f'Distribución histórica — Precio vs {label}')
 
-    # — Precio de fondo en fila 4 —
+    # — Precio de referencia (fila 4) —
     ax_p = fig.add_subplot(gs[3, :])
-    ax_p.plot(df['date'], df['close'], color='white', linewidth=0.6)
-    ax_p.set_title('Precio BTC (referencia)', fontsize=9)
-    ax_p.tick_params(labelsize=7)
-    ax_p.set_facecolor('#1a1a2e')
+    ax_p.plot(df['date'], df['close'], color=COLORS['precio'], linewidth=0.7,
+              label='Precio cierre')
+    ax_p.legend(fontsize=7)
+    estilo_ax(ax_p,
+              xlabel='Fecha',
+              ylabel='Precio (USD)',
+              title='Precio de cierre (referencia temporal)')
 
     out = os.path.join(RESULTS, f'explore_{tf}_distancias.png')
-    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
 
 # ── gráfica 2: dist entre medias y ratio armónico ────────────────────────────
 
 def plot_ratio(df: pd.DataFrame, tf: str):
-    fig, axes = plt.subplots(3, 1, figsize=(18, 10), facecolor='#0f0f1a')
+    fig, axes = plt.subplots(3, 1, figsize=(18, 11), facecolor=BG_FIG)
     fig.suptitle(f'Relaciones entre EMAs y Ratio Armónico  [{tf}]',
-                 fontsize=14, fontweight='bold')
+                 fontsize=14, fontweight='bold', color='#111111', y=0.99)
 
     # dist_10_55
     ax = axes[0]
-    ax.plot(df['date'], df['dist_10_55'], color='#4fc3f7', linewidth=0.7)
-    ax.axhline(0, color='white', linewidth=0.5, linestyle='--')
+    c = COLORS['dist_10_55']
+    ax.plot(df['date'], df['dist_10_55'], color=c, linewidth=0.8, label='dist_10_55')
+    ax.axhline(0, color=C_ZERO, linewidth=0.8, linestyle='--', label='0%')
     ax.fill_between(df['date'], df['dist_10_55'], 0,
-                    where=df['dist_10_55'] > 0, alpha=0.15, color='lime')
+                    where=df['dist_10_55'] > 0, alpha=0.15, color=c)
     ax.fill_between(df['date'], df['dist_10_55'], 0,
-                    where=df['dist_10_55'] < 0, alpha=0.15, color='red')
-    ax.set_ylabel('dist_10_55 (%)', fontsize=8)
-    ax.set_title('EMA10 vs EMA55 (azul = alcista)', fontsize=9)
-    ax.set_facecolor('#1a1a2e')
-    ax.tick_params(labelsize=7)
+                    where=df['dist_10_55'] < 0, alpha=0.15, color='#e53935')
+    ax.legend(fontsize=8)
+    estilo_ax(ax,
+              xlabel='Fecha',
+              ylabel='(EMA10 − EMA55) / EMA55 × 100 (%)',
+              title='Separación EMA10 vs EMA55  —  positivo = EMA10 sobre EMA55')
 
     # dist_55_200
     ax = axes[1]
-    ax.plot(df['date'], df['dist_55_200'], color='#fff176', linewidth=0.7)
-    ax.axhline(0, color='white', linewidth=0.5, linestyle='--')
+    c = COLORS['dist_55_200']
+    ax.plot(df['date'], df['dist_55_200'], color=c, linewidth=0.8, label='dist_55_200')
+    ax.axhline(0, color=C_ZERO, linewidth=0.8, linestyle='--', label='0%')
     ax.fill_between(df['date'], df['dist_55_200'], 0,
-                    where=df['dist_55_200'] > 0, alpha=0.15, color='lime')
+                    where=df['dist_55_200'] > 0, alpha=0.15, color=c)
     ax.fill_between(df['date'], df['dist_55_200'], 0,
-                    where=df['dist_55_200'] < 0, alpha=0.15, color='red')
-    ax.set_ylabel('dist_55_200 (%)', fontsize=8)
-    ax.set_title('EMA55 vs EMA200 (tendencia de fondo)', fontsize=9)
-    ax.set_facecolor('#1a1a2e')
-    ax.tick_params(labelsize=7)
+                    where=df['dist_55_200'] < 0, alpha=0.15, color='#e53935')
+    ax.legend(fontsize=8)
+    estilo_ax(ax,
+              xlabel='Fecha',
+              ylabel='(EMA55 − EMA200) / EMA200 × 100 (%)',
+              title='Separación EMA55 vs EMA200  —  tendencia de fondo del activo')
 
-    # ratio armónico — recortado para legibilidad
+    # ratio armónico
     ratio = df['ratio_armonico'].clip(-3, 3)
     ax = axes[2]
-    ax.plot(df['date'], ratio, color='#ffb74d', linewidth=0.7)
-    ax.axhline(0,   color='white',  linewidth=0.5, linestyle='--')
-    ax.axhline(1,   color='lime',   linewidth=0.5, linestyle=':',  label='ratio=1')
-    ax.axhline(-1,  color='red',    linewidth=0.5, linestyle=':',  label='ratio=-1')
-    ax.axhline(0.5, color='cyan',   linewidth=0.4, linestyle='--', label='ratio=0.5')
+    c = COLORS['ratio']
+    ax.plot(df['date'], ratio, color=c, linewidth=0.8, label='ratio_armonico (clip ±3)')
+    ax.axhline(0,    color=C_ZERO,   linewidth=0.8, linestyle='--', label='0')
+    ax.axhline(1,    color='#2e7d32', linewidth=0.7, linestyle=':',  label='ratio = 1')
+    ax.axhline(-1,   color='#e53935', linewidth=0.7, linestyle=':',  label='ratio = −1')
+    ax.axhline(0.5,  color='#1565c0', linewidth=0.6, linestyle='--', label='ratio = 0.5')
     ax.fill_between(df['date'], ratio, 0,
-                    where=ratio > 0, alpha=0.12, color='lime')
+                    where=ratio > 0, alpha=0.12, color=c)
     ax.fill_between(df['date'], ratio, 0,
-                    where=ratio < 0, alpha=0.12, color='red')
-    ax.set_ylabel('Ratio (clip ±3)', fontsize=8)
-    ax.set_title('Ratio Armónico = dist_10_55 / dist_55_200', fontsize=9)
-    ax.legend(fontsize=7, loc='upper left')
-    ax.set_facecolor('#1a1a2e')
-    ax.tick_params(labelsize=7)
+                    where=ratio < 0, alpha=0.12, color='#e53935')
+    ax.legend(fontsize=7, ncol=3)
+    estilo_ax(ax,
+              xlabel='Fecha',
+              ylabel='dist_10_55 / dist_55_200  (adimensional)',
+              title='Ratio Armónico = dist_10_55 / dist_55_200  (recortado a ±3)')
 
     plt.tight_layout()
     out = os.path.join(RESULTS, f'explore_{tf}_ratio.png')
-    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
 
@@ -201,10 +243,7 @@ def write_stats(df: pd.DataFrame, tf: str):
         f"    mediana = {p50:+.3f}\n"
     )
 
-    lines += [
-        '',
-        '── Pendientes de EMAs (%) ──',
-    ]
+    lines += ['', '── Pendientes de EMAs (%) ──']
     for col in ['slope10', 'slope55', 'slope200']:
         lines.append(stats_block(df, col))
 

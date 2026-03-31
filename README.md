@@ -81,9 +81,36 @@ Mide profundidad histórica de los apoyos en cada EMA y rebote posterior.
 
 ---
 
+### PASO 5 — Memoria de la serie (Hurst)
+```bash
+python hurst.py
+```
+Calcula el exponente de Hurst para cada distancia. Responde:
+*"¿Cuando el precio se aleja de una EMA, tiende a seguir alejándose o a volver?"*
+
+---
+
+### PASO 6 — Amplitud y velocidad del ciclo (Hilbert)
+```bash
+python hilbert_analysis.py
+```
+Extrae la envolvente y frecuencia instantánea de cada oscilación. Responde:
+*"¿La oscilación siempre tiene la misma fuerza y velocidad, o cambia con el tiempo?"*
+
+---
+
+### PASO 7 — Proporciones de Fibonacci
+```bash
+python fibonacci_analysis.py
+```
+Mide si los tiempos entre apoyos y las amplitudes de corrección guardan
+proporción áurea (0.618, 0.786, 1.618).
+
+---
+
 ### Correr todo de una vez
 ```bash
-python parse_csv.py && python explore.py && python fft_analysis.py && python apoyo_stats.py
+python parse_csv.py && python explore.py && python fft_analysis.py && python apoyo_stats.py && python hurst.py && python hilbert_analysis.py && python fibonacci_analysis.py
 ```
 
 ---
@@ -92,10 +119,13 @@ python parse_csv.py && python explore.py && python fft_analysis.py && python apo
 
 | Script | Archivos en `results/` |
 |--------|----------------------|
-| `parse_csv.py` | `*_clean.csv` (3 archivos, uno por timeframe) |
+| `parse_csv.py` | `*_clean.csv` |
 | `explore.py` | `explore_{TF}_distancias.png`, `explore_{TF}_ratio.png`, `explore_{TF}_stats.txt` |
 | `fft_analysis.py` | `fft_{TF}_espectro.png`, `fft_{TF}_ciclos.txt` |
 | `apoyo_stats.py` | `apoyo_{TF}_detalle.png`, `apoyo_{TF}_rebote.png`, `apoyo_{TF}_stats.txt` |
+| `hurst.py` | `hurst_{TF}_rs.png`, `hurst_{TF}_valores.txt` |
+| `hilbert_analysis.py` | `hilbert_{TF}_envolvente.png`, `hilbert_{TF}_frecuencia.png`, `hilbert_{TF}_resumen.txt` |
+| `fibonacci_analysis.py` | `fibonacci_{TF}_tiempos.png`, `fibonacci_{TF}_amplitudes.png`, `fibonacci_{TF}_stats.txt` |
 
 > Ver descripción completa de cada archivo: `results/INVENTARIO.md`
 
@@ -141,5 +171,8 @@ pip install pandas matplotlib scipy
 | `explore.py` | ✅ |
 | `fft_analysis.py` | ✅ |
 | `apoyo_stats.py` | ✅ |
+| `hurst.py` | ✅ |
+| `hilbert_analysis.py` | ✅ |
+| `fibonacci_analysis.py` | ✅ |
 | Documentación de scripts | ✅ |
 | Interpretación final de resultados | ⬜ pendiente (análisis agnóstico externo) |

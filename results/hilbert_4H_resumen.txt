@@ -1,0 +1,33 @@
+ANÁLISIS DE HILBERT  [4H]
+Filas: 9960 | Rango: 2021-09-13 08:00:00 → 2026-03-31 00:25:00
+============================================================
+
+Qué mide:
+  Envolvente  → amplitud de la oscilación en cada momento
+  Período     → cuántas velas dura el ciclo en cada momento
+  (Si el período cambia mucho: el ciclo NO es constante en el tiempo)
+============================================================
+
+── EMA10 (dist_p10) ──
+  Amplitud media:    1.773%
+  Amplitud std:      1.359%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   14.2 velas
+  Período p25/p75:   8.4 / 28.1 velas
+  Rango intercuartil del período: 19.6 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)
+
+── EMA55 (dist_p55) ──
+  Amplitud media:    4.841%
+  Amplitud std:      3.177%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   42.2 velas
+  Período p25/p75:   21.8 / 94.1 velas
+  Rango intercuartil del período: 72.3 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)
+
+── EMA200 (dist_p200) ──
+  Amplitud media:    10.114%
+  Amplitud std:      5.553%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   97.3 velas
+  Período p25/p75:   48.6 / 229.6 velas
+  Rango intercuartil del período: 181.0 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)

@@ -26,13 +26,13 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.signal import argrelmin
+from plot_style import BG_FIG, BG_AX, COLORS, C_NEG, estilo_ax
 
 BASE    = os.path.dirname(__file__)
 RESULTS = os.path.join(BASE, 'results')
 
-# ── parámetros ────────────────────────────────────────────────────────────────
-VENTANA_MIN  = 5    # velas a cada lado para detectar mínimo local
-REBOTE_VELAS = 10   # velas hacia adelante para medir rebote
+VENTANA_MIN  = 5
+REBOTE_VELAS = 10
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -83,17 +83,14 @@ def detectar_apoyos(df: pd.DataFrame, col: str,
 # ── gráfica 1: profundidades históricas ──────────────────────────────────────
 
 def plot_profundidades(df: pd.DataFrame, apoyos: dict, tf: str):
-    """
-    apoyos = {'dist_p10': df_eventos, 'dist_p55': df_eventos, ...}
-    """
-    fig, axes = plt.subplots(3, 2, figsize=(18, 12), facecolor='#0f0f1a')
+    fig, axes = plt.subplots(3, 2, figsize=(18, 13), facecolor=BG_FIG)
     fig.suptitle(f'Profundidad de Apoyos en EMAs  [{tf}]',
-                 fontsize=14, fontweight='bold')
+                 fontsize=14, fontweight='bold', color='#111111')
 
     configs = [
-        ('dist_p10',  'EMA10',  '#4fc3f7', axes[0, 0], axes[0, 1]),
-        ('dist_p55',  'EMA55',  '#fff176', axes[1, 0], axes[1, 1]),
-        ('dist_p200', 'EMA200', '#ef9a9a', axes[2, 0], axes[2, 1]),
+        ('dist_p10',  'EMA10',  COLORS['dist_p10'],  axes[0, 0], axes[0, 1]),
+        ('dist_p55',  'EMA55',  COLORS['dist_p55'],  axes[1, 0], axes[1, 1]),
+        ('dist_p200', 'EMA200', COLORS['dist_p200'], axes[2, 0], axes[2, 1]),
     ]
 
     for col, label, color, ax_serie, ax_hist in configs:
@@ -101,42 +98,44 @@ def plot_profundidades(df: pd.DataFrame, apoyos: dict, tf: str):
         if ev is None or ev.empty:
             continue
 
-        # — Serie de profundidades en el tiempo —
-        ax_serie.plot(df['date'], df[col], color='#444', linewidth=0.5,
-                      alpha=0.6)
+        # — Serie histórica con apoyos marcados —
+        ax_serie.plot(df['date'], df[col], color='#aaaaaa', linewidth=0.5,
+                      alpha=0.8, label=col)
         ax_serie.scatter(ev['date'], ev['profundidad'],
-                         color=color, s=15, zorder=5, alpha=0.8)
-        ax_serie.axhline(0, color='white', linewidth=0.5, linestyle='--')
-        # líneas de percentiles
+                         color=color, s=18, zorder=5, alpha=0.85,
+                         label=f'apoyos (n={len(ev)})')
+        ax_serie.axhline(0, color='#888888', linewidth=0.8, linestyle='--')
         for pct, val in zip([10, 25, 75, 90],
                             np.percentile(ev['profundidad'], [10, 25, 75, 90])):
-            ax_serie.axhline(val, color=color, linewidth=0.4,
-                             linestyle=':', alpha=0.5,
+            ax_serie.axhline(val, color=color, linewidth=0.7,
+                             linestyle=':', alpha=0.7,
                              label=f'p{pct}={val:.1f}%')
-        ax_serie.set_title(f'Apoyos en {label} ({len(ev)} eventos)', fontsize=9)
-        ax_serie.set_facecolor('#1a1a2e')
-        ax_serie.tick_params(labelsize=7)
         ax_serie.legend(fontsize=6, ncol=2)
+        estilo_ax(ax_serie,
+                  xlabel='Fecha',
+                  ylabel=f'dist_p{label[-3:]} (%)',
+                  title=f'Apoyos detectados en {label}  ({len(ev)} eventos)')
 
         # — Histograma de profundidades —
         data = ev['profundidad'].dropna()
-        ax_hist.hist(data, bins=40, color=color, alpha=0.8, edgecolor='none',
-                     orientation='horizontal')
-        ax_hist.axhline(0, color='white', linewidth=0.5, linestyle='--')
-        ax_hist.axhline(data.median(), color='cyan', linewidth=1,
-                        linestyle=':', label=f'mediana={data.median():.1f}%')
+        ax_hist.hist(data, bins=40, color=color, alpha=0.75, edgecolor='none',
+                     orientation='horizontal', label=f'n={len(data)}')
+        ax_hist.axhline(0, color='#888888', linewidth=0.8, linestyle='--')
+        ax_hist.axhline(data.median(), color='#111111', linewidth=1.2,
+                        linestyle='-', label=f'mediana={data.median():.1f}%')
         p10, p25, p75, p90 = np.percentile(data, [10, 25, 75, 90])
-        for pval in [p10, p25, p75, p90]:
-            ax_hist.axhline(pval, color=color, linewidth=0.6,
-                            linestyle='--', alpha=0.6)
-        ax_hist.set_title(f'Distribución profundidad {label}', fontsize=9)
+        for pval, lbl in zip([p10, p90], ['p10', 'p90']):
+            ax_hist.axhline(pval, color=color, linewidth=0.8,
+                            linestyle='--', alpha=0.7, label=f'{lbl}={pval:.1f}%')
         ax_hist.legend(fontsize=7)
-        ax_hist.set_facecolor('#1a1a2e')
-        ax_hist.tick_params(labelsize=7)
+        estilo_ax(ax_hist,
+                  xlabel='Número de eventos',
+                  ylabel=f'Profundidad del apoyo (%)',
+                  title=f'Distribución de profundidades — {label}')
 
     plt.tight_layout()
     out = os.path.join(RESULTS, f'apoyo_{tf}_detalle.png')
-    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
 
@@ -144,15 +143,15 @@ def plot_profundidades(df: pd.DataFrame, apoyos: dict, tf: str):
 # ── gráfica 2: rebote tras el apoyo ──────────────────────────────────────────
 
 def plot_rebotes(apoyos: dict, tf: str):
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6), facecolor='#0f0f1a')
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6), facecolor=BG_FIG)
     fig.suptitle(
         f'Rebote {REBOTE_VELAS} velas después del apoyo  [{tf}]',
-        fontsize=14, fontweight='bold')
+        fontsize=14, fontweight='bold', color='#111111')
 
     configs = [
-        ('dist_p10',  'EMA10',  '#4fc3f7', axes[0]),
-        ('dist_p55',  'EMA55',  '#fff176', axes[1]),
-        ('dist_p200', 'EMA200', '#ef9a9a', axes[2]),
+        ('dist_p10',  'EMA10',  COLORS['dist_p10'],  axes[0]),
+        ('dist_p55',  'EMA55',  COLORS['dist_p55'],  axes[1]),
+        ('dist_p200', 'EMA200', COLORS['dist_p200'], axes[2]),
     ]
 
     for col, label, color, ax in configs:
@@ -160,28 +159,27 @@ def plot_rebotes(apoyos: dict, tf: str):
         if ev is None or ev.empty:
             continue
 
-        data = ev['rebote_pct'].dropna()
+        data      = ev['rebote_pct'].dropna()
         positivos = (data > 0).sum()
         total     = len(data)
         tasa      = positivos / total * 100 if total > 0 else 0
 
-        ax.hist(data, bins=50, color=color, alpha=0.8, edgecolor='none')
-        ax.axvline(0, color='white', linewidth=1, linestyle='--')
-        ax.axvline(data.median(), color='cyan', linewidth=1.2,
+        ax.hist(data, bins=50, color=color, alpha=0.75, edgecolor='none',
+                label=f'n={total}')
+        ax.axvline(0, color='#888888', linewidth=1, linestyle='--', label='0%')
+        ax.axvline(data.median(), color='#111111', linewidth=1.2,
                    label=f'mediana={data.median():.1f}%')
-        ax.set_title(
-            f'Apoyo en {label}\n'
-            f'{total} eventos | {tasa:.0f}% subieron\n'
-            f'mediana rebote: {data.median():.1f}%',
-            fontsize=9)
         ax.legend(fontsize=7)
-        ax.set_xlabel('Cambio de precio (%)', fontsize=8)
-        ax.set_facecolor('#1a1a2e')
-        ax.tick_params(labelsize=7)
+        estilo_ax(ax,
+                  xlabel=f'Cambio de precio en {REBOTE_VELAS} velas después del apoyo (%)',
+                  ylabel='Número de eventos',
+                  title=f'Apoyo en {label}\n'
+                        f'{total} eventos  |  {tasa:.0f}% subieron  |  '
+                        f'mediana rebote: {data.median():.1f}%')
 
     plt.tight_layout()
     out = os.path.join(RESULTS, f'apoyo_{tf}_rebote.png')
-    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
 

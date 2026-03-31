@@ -20,20 +20,20 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from plot_style import BG_FIG, BG_AX, COLORS, estilo_ax
 
 BASE    = os.path.dirname(__file__)
 RESULTS = os.path.join(BASE, 'results')
-
-TOP_N = 5   # cuántos ciclos dominantes reportar por señal
+TOP_N   = 5
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
-def load(path: str) -> pd.DataFrame:
+def load(path):
     df = pd.read_csv(path, parse_dates=['date'])
     return df.dropna(subset=['ema200']).reset_index(drop=True)
 
 
-def timeframe_label(filename: str) -> str:
+def timeframe_label(filename):
     name = os.path.basename(filename).upper()
     for tf in ('1D', '4H', '1H'):
         if tf in name:
@@ -41,7 +41,7 @@ def timeframe_label(filename: str) -> str:
     return 'UNK'
 
 
-def fft_top_cycles(signal: np.ndarray, top_n: int = TOP_N):
+def fft_top_cycles(signal, top_n=TOP_N):
     """
     Devuelve los top_n ciclos dominantes de una señal.
     Retorna lista de (ciclo_en_velas, amplitud, fraccion_energia)
@@ -65,7 +65,7 @@ def fft_top_cycles(signal: np.ndarray, top_n: int = TOP_N):
     for idx in sorted_idx[:top_n]:
         if freqs[idx] == 0:
             continue
-        ciclo   = int(round(1.0 / freqs[idx]))
+        ciclo    = int(round(1.0 / freqs[idx]))
         amplitud = np.sqrt(power[idx])
         fraccion = power[idx] / total_power * 100
         results.append((ciclo, amplitud, fraccion))
@@ -75,17 +75,16 @@ def fft_top_cycles(signal: np.ndarray, top_n: int = TOP_N):
 
 # ── gráfica de espectro ───────────────────────────────────────────────────────
 
-def plot_espectro(df: pd.DataFrame, tf: str):
+def plot_espectro(df, tf):
     signals = {
-        'dist_p10':  ('#4fc3f7', 'Precio vs EMA10'),
-        'dist_p55':  ('#fff176', 'Precio vs EMA55'),
-        'dist_p200': ('#ef9a9a', 'Precio vs EMA200'),
+        'dist_p10':  (COLORS['dist_p10'],  'Precio vs EMA10'),
+        'dist_p55':  (COLORS['dist_p55'],  'Precio vs EMA55'),
+        'dist_p200': (COLORS['dist_p200'], 'Precio vs EMA200'),
     }
 
-    fig, axes = plt.subplots(len(signals), 1, figsize=(16, 10),
-                             facecolor='#0f0f1a')
+    fig, axes = plt.subplots(len(signals), 1, figsize=(16, 11), facecolor=BG_FIG)
     fig.suptitle(f'Espectro FFT — ciclos dominantes  [{tf}]',
-                 fontsize=14, fontweight='bold')
+                 fontsize=14, fontweight='bold', color='#111111')
 
     for ax, (col, (color, label)) in zip(axes, signals.items()):
         signal = df[col].dropna().values
@@ -98,45 +97,43 @@ def plot_espectro(df: pd.DataFrame, tf: str):
         with np.errstate(divide='ignore'):
             ciclos_eje = np.where(freqs > 0, 1.0 / freqs, np.nan)
 
-        ax.fill_between(ciclos_eje, power, alpha=0.4, color=color)
-        ax.plot(ciclos_eje, power, color=color, linewidth=0.8)
+        ax.fill_between(ciclos_eje, power, alpha=0.35, color=color)
+        ax.plot(ciclos_eje, power, color=color, linewidth=1.0)
 
-        # Marcar los picos top
+        # marcar picos top
         for ciclo, amplitud, fraccion in top:
-            ax.axvline(ciclo, color='white', linewidth=0.7,
-                       linestyle='--', alpha=0.6)
-            ax.text(ciclo, ax.get_ylim()[1] * 0.85,
+            ax.axvline(ciclo, color='#333333', linewidth=0.8,
+                       linestyle='--', alpha=0.7)
+            ymax = ax.get_ylim()[1] if ax.get_ylim()[1] > 0 else power.max()
+            ax.text(ciclo, ymax * 0.82,
                     f'{ciclo}v\n{fraccion:.1f}%',
-                    color='white', fontsize=7, ha='center',
-                    bbox=dict(boxstyle='round,pad=0.2', fc='#333', alpha=0.7))
+                    color='#111111', fontsize=7, ha='center',
+                    bbox=dict(boxstyle='round,pad=0.2', fc='white',
+                              ec='#cccccc', alpha=0.85))
 
         ax.set_xscale('log')
         ax.set_xlim(2, len(signal) // 2)
-        ax.set_xlabel('Duración del ciclo (velas)', fontsize=8)
-        ax.set_ylabel('Potencia', fontsize=8)
-        ax.set_title(f'{label}  — top ciclos: ' +
-                     ', '.join(f'{c}v ({f:.1f}%)' for c, _, f in top),
-                     fontsize=9)
-        ax.set_facecolor('#1a1a2e')
-        ax.tick_params(labelsize=7)
+        top_label = ', '.join(f'{c}v ({f:.1f}%)' for c, _, f in top)
+        estilo_ax(ax,
+                  xlabel='Duración del ciclo (número de velas)  —  escala logarítmica',
+                  ylabel='Potencia espectral',
+                  title=f'{label}  —  top ciclos: {top_label}')
 
     plt.tight_layout()
     out = os.path.join(RESULTS, f'fft_{tf}_espectro.png')
-    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
 
 
-# ── reporte de ciclos → txt ───────────────────────────────────────────────────
+# ── reporte txt ───────────────────────────────────────────────────────────────
 
-def write_ciclos(df: pd.DataFrame, tf: str):
+def write_ciclos(df, tf):
     lines = [
         f'ANÁLISIS FFT — CICLOS DOMINANTES  [{tf}]',
         f'Filas: {len(df)} | Rango: {df["date"].iloc[0]} → {df["date"].iloc[-1]}',
-        '=' * 60,
-        '',
+        '=' * 60, '',
     ]
-
     for col in ['dist_p10', 'dist_p55', 'dist_p200', 'dist_10_55', 'dist_55_200']:
         signal = df[col].dropna().values
         if len(signal) < 20:
@@ -146,7 +143,6 @@ def write_ciclos(df: pd.DataFrame, tf: str):
         for i, (ciclo, amplitud, fraccion) in enumerate(top, 1):
             lines.append(f'    #{i}  {ciclo} velas  ({fraccion:.2f}% de la energía)')
         lines.append('')
-
     out = os.path.join(RESULTS, f'fft_{tf}_ciclos.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
@@ -160,15 +156,13 @@ def main():
     if not clean_files:
         print('No se encontraron archivos _clean.csv en results/')
         return
-
     for path in clean_files:
         tf = timeframe_label(path)
         print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
         df = load(path)
-        print(f'   {len(df)} filas con datos completos')
+        print(f'   {len(df)} filas')
         plot_espectro(df, tf)
         write_ciclos(df, tf)
-
     print('\n✅ Listo. Revisa la carpeta results/')
 
 
