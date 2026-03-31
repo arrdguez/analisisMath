@@ -14,6 +14,9 @@ Este reporte contiene el análisis matemático de las relaciones entre el precio
 | **Hilbert** | Amplitud/Periodo inst. | Muestra cómo cambia la 'fuerza' y la velocidad del ciclo en el tiempo. |
 | **Fibonacci** | Ratios armónicos | Busca si los retrocesos y tiempos coinciden con la proporción áurea. |
 | **Apoyos** | Profundidad de rebote | Mide cuánto 'perfora' el precio la EMA antes de rebotar. |
+| **Correlación** | Sincronía entre EMAs | Determina si las distancias entre EMAs se mueven juntas o con desfase. |
+| **Escala** | Relaciones entre rangos | Verifica si las correcciones guardan proporciones matemáticas constantes. |
+| **Comparación** | Consistencia multi-timeframe | Evalúa si los patrones se mantienen en diferentes escalas temporales. |
 
 ## 3. Resultados Numéricos Consolidados
 
@@ -285,6 +288,73 @@ Niveles Fibonacci de referencia: 0.236, 0.382, 0.500, 0.618, 0.786, 1.618
     Fib más cercano:  0.786  (distancia0.0441)
 ```
 
+#### > Correlación
+```text
+ANÁLISIS DE CORRELACIÓN  [1D]
+Filas: 2906 | Rango: 2018-04-18 00:00:00 → 2026-03-31 00:26:00
+
+
+── CORRELACIÓN SINCRÓNICA (lag  0) ──
+  Pearson r    0.6277
+  Valor p      3.3075e-318
+  Interpretación:
+    • Correlación FUERTE (0.5-0.7)
+    • Estadísticamente SIGNIFICATIVA (p < 0.05)
+
+── CORRELACIÓN CRUZADA (desfase óptimo) ──
+  Lag óptimo   -32 velas
+  Correlación en lag óptimo  0.7864
+  Interpretación:
+    • dist_55_200 PRECEDE a dist_10_55 por 32 velas
+    • Mejor correlación con desfase que sincrónica
+
+── RELACIÓN LINEAL (regresión) ──
+  Pendiente    0.3675
+  Intercepto   -0.0996
+  Ecuación: dist_10_55  0.3675 × dist_55_200 + -0.0996
+
+Interpretación de la pendiente:
+    • dist_10_55 responde ATENUANDO los movimientos de dist_55_200 (pendiente < 1)
+
+── RESUMEN PARA INDICADOR ──
+  1. Correlación sincrónica: SÍ
+  2. Desfase óptimo: -32 velas
+  3. Relación: dist_10_55 ≈ 0.37 × dist_55_200
+  4. Fuerza relación: fuerte
+```
+
+#### > Escala
+```text
+TABLA DE RATIOS DE ESCALA  [1D]
+
+
+── ESTADÍSTICAS DE DISTANCIAS ──
+Variable       | Mediana(abs) |   p25   |   p75   |  Rango  |   Media  |
+-------------- | ------------ | ------- | ------- | ------- | -------- |
+dist_p10      |        2.34% |   -2.10% |    2.64% |    4.74% |     0.31% |
+dist_p55      |        7.73% |   -6.26% |    9.70% |   15.96% |     1.96% |
+dist_p200     |       17.07% |  -13.04% |   21.76% |   34.80% |     7.40% |
+
+── RATIOS EMPÍRICOS ──
+Usando medianas de valores absolutos:
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  3.30 | x3                | 0.297     |
+200/55    |  2.21 | x2                | 0.209     |
+200/10    |  7.28 | x6                | 1.284     |
+
+Usando rangos intercuartiles (p75-p25):
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  3.37 | x3                | 0.369     |
+200/55    |  2.18 | x2                | 0.180     |
+200/10    |  7.35 | x6                | 1.345     |
+
+── INTERPRETACIÓN ──
+Distancias pequeñas (<0.05) a escalas teóricas sugieren relación armónica.
+Ratios consistentes entre métodos (abs/range) indican robustez.
+```
+
 ### 🕒 Timeframe: 4H
 
 #### > Stats
@@ -551,6 +621,73 @@ Niveles Fibonacci de referencia: 0.236, 0.382, 0.500, 0.618, 0.786, 1.618
     Mediana ratio:    0.8218
     p25/p75:          0.4919 / 1.3924
     Fib más cercano:  0.786  (distancia0.0358)
+```
+
+#### > Correlación
+```text
+ANÁLISIS DE CORRELACIÓN  [4H]
+Filas: 9960 | Rango: 2021-09-13 08:00:00 → 2026-03-31 00:25:00
+
+
+── CORRELACIÓN SINCRÓNICA (lag  0) ──
+  Pearson r    0.5909
+  Valor p      0.0000e+00
+  Interpretación:
+    • Correlación FUERTE (0.5-0.7)
+    • Estadísticamente SIGNIFICATIVA (p < 0.05)
+
+── CORRELACIÓN CRUZADA (desfase óptimo) ──
+  Lag óptimo   -28 velas
+  Correlación en lag óptimo  0.7386
+  Interpretación:
+    • dist_55_200 PRECEDE a dist_10_55 por 28 velas
+    • Mejor correlación con desfase que sincrónica
+
+── RELACIÓN LINEAL (regresión) ──
+  Pendiente    0.3501
+  Intercepto   -0.0073
+  Ecuación: dist_10_55  0.3501 × dist_55_200 + -0.0073
+
+Interpretación de la pendiente:
+    • dist_10_55 responde ATENUANDO los movimientos de dist_55_200 (pendiente < 1)
+
+── RESUMEN PARA INDICADOR ──
+  1. Correlación sincrónica: SÍ
+  2. Desfase óptimo: -28 velas
+  3. Relación: dist_10_55 ≈ 0.35 × dist_55_200
+  4. Fuerza relación: fuerte
+```
+
+#### > Escala
+```text
+TABLA DE RATIOS DE ESCALA  [4H]
+
+
+── ESTADÍSTICAS DE DISTANCIAS ──
+Variable       | Mediana(abs) |   p25   |   p75   |  Rango  |   Media  |
+-------------- | ------------ | ------- | ------- | ------- | -------- |
+dist_p10      |        0.72% |   -0.69% |    0.76% |    1.45% |     0.01% |
+dist_p55      |        2.15% |   -2.12% |    2.19% |    4.30% |     0.10% |
+dist_p200     |        4.85% |   -4.23% |    5.42% |    9.65% |     0.40% |
+
+── RATIOS EMPÍRICOS ──
+Usando medianas de valores absolutos:
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  2.97 | x3                | 0.030     |
+200/55    |  2.25 | x2.5              | 0.249     |
+200/10    |  6.69 | x6                | 0.687     |
+
+Usando rangos intercuartiles (p75-p25):
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  2.97 | x3                | 0.030     |
+200/55    |  2.24 | x2                | 0.242     |
+200/10    |  6.66 | x6                | 0.658     |
+
+── INTERPRETACIÓN ──
+Distancias pequeñas (<0.05) a escalas teóricas sugieren relación armónica.
+Ratios consistentes entre métodos (abs/range) indican robustez.
 ```
 
 ### 🕒 Timeframe: 1H
@@ -821,13 +958,80 @@ Niveles Fibonacci de referencia: 0.236, 0.382, 0.500, 0.618, 0.786, 1.618
     Fib más cercano:  0.786  (distancia0.0199)
 ```
 
+#### > Correlación
+```text
+ANÁLISIS DE CORRELACIÓN  [1H]
+Filas: 10000 | Rango: 2025-02-07 10:00:00 → 2026-03-31 00:26:00
+
+
+── CORRELACIÓN SINCRÓNICA (lag  0) ──
+  Pearson r    0.5524
+  Valor p      0.0000e+00
+  Interpretación:
+    • Correlación FUERTE (0.5-0.7)
+    • Estadísticamente SIGNIFICATIVA (p < 0.05)
+
+── CORRELACIÓN CRUZADA (desfase óptimo) ──
+  Lag óptimo   -25 velas
+  Correlación en lag óptimo  0.7052
+  Interpretación:
+    • dist_55_200 PRECEDE a dist_10_55 por 25 velas
+    • Mejor correlación con desfase que sincrónica
+
+── RELACIÓN LINEAL (regresión) ──
+  Pendiente    0.3588
+  Intercepto   0.0149
+  Ecuación: dist_10_55  0.3588 × dist_55_200 + 0.0149
+
+Interpretación de la pendiente:
+    • dist_10_55 responde ATENUANDO los movimientos de dist_55_200 (pendiente < 1)
+
+── RESUMEN PARA INDICADOR ──
+  1. Correlación sincrónica: SÍ
+  2. Desfase óptimo: -25 velas
+  3. Relación: dist_10_55 ≈ 0.36 × dist_55_200
+  4. Fuerza relación: fuerte
+```
+
+#### > Escala
+```text
+TABLA DE RATIOS DE ESCALA  [1H]
+
+
+── ESTADÍSTICAS DE DISTANCIAS ──
+Variable       | Mediana(abs) |   p25   |   p75   |  Rango  |   Media  |
+-------------- | ------------ | ------- | ------- | ------- | -------- |
+dist_p10      |        0.29% |   -0.29% |    0.29% |    0.58% |    -0.02% |
+dist_p55      |        0.84% |   -0.86% |    0.83% |    1.69% |    -0.10% |
+dist_p200     |        1.73% |   -2.01% |    1.49% |    3.50% |    -0.37% |
+
+── RATIOS EMPÍRICOS ──
+Usando medianas de valores absolutos:
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  2.89 | x3                | 0.106     |
+200/55    |  2.05 | x2                | 0.048     |
+200/10    |  5.93 | x6                | 0.074     |
+
+Usando rangos intercuartiles (p75-p25):
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  2.90 | x3                | 0.099     |
+200/55    |  2.07 | x2                | 0.067     |
+200/10    |  6.00 | x6                | 0.004     |
+
+── INTERPRETACIÓN ──
+Distancias pequeñas (<0.05) a escalas teóricas sugieren relación armónica.
+Ratios consistentes entre métodos (abs/range) indican robustez.
+```
+
 ---
 ## 🤖 INSTRUCCIÓN PARA IA (PROMPT)
 > **Copia y pega el siguiente texto en tu chat con IA:**
 
 ```text
 Actúa como una IA experta en análisis cuantitativo, procesamiento de señales y trading algorítmico.
-He realizado una serie de análisis matemáticos (Fourier, Hurst, Hilbert, Fibonacci) sobre las distancias del precio de BTC a sus EMAs de 10, 55 y 200 períodos en diferentes timeframes (1D, 4H, 1H).
+He realizado una serie de análisis matemáticos (Fourier, Hurst, Hilbert, Fibonacci, correlación, escala y comparación entre timeframes) sobre las distancias del precio de BTC a sus EMAs de 10, 55 y 200 períodos en diferentes timeframes (1D, 4H, 1H).
 
 Basándote en los DATOS NUMÉRICOS proporcionados arriba en el reporte:
 1. Identifica las MAGNITUDES RECURRENTES de las correcciones (¿a qué distancia típica en % rebotan los apoyos en cada EMA?).

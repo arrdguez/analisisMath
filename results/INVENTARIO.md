@@ -5,8 +5,53 @@ y cómo leerlo.
 
 ---
 
-## 📊 Archivos de datos limpios (generados por `parse_csv.py`)
+## 🔗 Análisis de Correlación (generados por `correlation_analysis.py`)
 
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `correlation_{TF}_ccf.png` | Correlación cruzada vs lag | Pico en lag≠0 indica desfase; lag óptimo muestra cuántas velas adelanta/retrasa una distancia respecto a la otra |
+| `correlation_{TF}_scatter.png` | Diagrama de dispersión con regresión lineal | Nube de puntos muestra relación lineal; línea roja = ajuste; r de Pearson indica fuerza y dirección de la correlación |
+| `correlation_{TF}_rolling.png` | Correlación móvil en el tiempo | Muestra si la relación es estable (línea plana) o varía con el régimen de mercado (oscilaciones) |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `correlation_{TF}_stats.txt` | Reporte con métricas cuantitativas | Pearson r (correlación sincrónica), valor p, lag óptimo, coeficientes de regresión, interpretación de fuerza de correlación |
+
+---
+
+## 📊 Comparativa entre Timeframes (generados por `timeframe_comparison.py`)
+
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `comparison_radar.png` | Gráfico radar de 6 métricas clave | Cada eje = una métrica; polígono más grande = valores mayores; comparación visual entre 1D, 4H, 1H |
+| `comparison_scaling.png` | Relación de escalas entre timeframes | Muestra cómo cada métrica escala al cambiar de timeframe; línea diagonal = escalado lineal perfecto |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `comparison_summary.md` | Tabla Markdown con todas las métricas | Métricas convertidas a días; valores clave de cada análisis; base para diseño de indicador multi-timeframe |
+| `comparison_table.txt` | Tabla ASCII para consulta rápida | Versión legible en terminal de las métricas más importantes |
+
+---
+
+## 📐 Análisis de Escalas (generados por `scale_analysis.py`)
+
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `scale_{TF}_ratios.png` | Histograma de ratios vs escalas teóricas | Comparación empírica de ratios absolutos y de rangos con escalas teóricas (2, 3, 6, φ, √2) |
+| `scale_{TF}_evolution.png` | Evolución temporal de los ratios | Muestra si los ratios son estables (línea plana) o varían con el tiempo; bandas sombreadas = rango intercuartil |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `scale_{TF}_table.txt` | Tabla de ratios empíricos | Ratios calculados usando medianas absolutas y rangos intercuartiles; valores reales vs teóricos |
+| `scale_{TF}_validation.txt` | Validación de hipótesis | Evaluación de si los datos apoyan las hipótesis de escala (×2, ×3, ×6) con umbrales de tolerancia |
+
+---
 | Archivo | Qué contiene |
 |---------|-------------|
 | `*_clean.csv` | Datos limpiados y listos para análisis. |

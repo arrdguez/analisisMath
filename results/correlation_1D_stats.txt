@@ -1,0 +1,31 @@
+ANÁLISIS DE CORRELACIÓN  [1D]
+Filas: 2906 | Rango: 2018-04-18 00:00:00 → 2026-03-31 00:26:00
+============================================================
+
+── CORRELACIÓN SINCRÓNICA (lag = 0) ──
+  Pearson r   = 0.6277
+  Valor p     = 3.3075e-318
+  Interpretación:
+    • Correlación FUERTE (0.5-0.7)
+    • Estadísticamente SIGNIFICATIVA (p < 0.05)
+
+── CORRELACIÓN CRUZADA (desfase óptimo) ──
+  Lag óptimo  = -32 velas
+  Correlación en lag óptimo = 0.7864
+  Interpretación:
+    • dist_55_200 PRECEDE a dist_10_55 por 32 velas
+    • Mejor correlación con desfase que sincrónica
+
+── RELACIÓN LINEAL (regresión) ──
+  Pendiente   = 0.3675
+  Intercepto  = -0.0996
+  Ecuación: dist_10_55 = 0.3675 × dist_55_200 + -0.0996
+
+Interpretación de la pendiente:
+    • dist_10_55 responde ATENUANDO los movimientos de dist_55_200 (pendiente < 1)
+
+── RESUMEN PARA INDICADOR ──
+  1. Correlación sincrónica: SÍ
+  2. Desfase óptimo: -32 velas
+  3. Relación: dist_10_55 ≈ 0.37 × dist_55_200
+  4. Fuerza relación: fuerte

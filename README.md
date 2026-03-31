@@ -99,6 +99,10 @@ Pasos disponibles (en este orden):
 | `hurst` | Exponente de Hurst — memoria de la serie |
 | `hilbert` | Envolvente y periodo instantaneo |
 | `fibonacci` | Ratios de tiempo y amplitud vs niveles Fibonacci |
+| `correlation` | Correlación y sincronía entre dist_10_55 y dist_55_200 |
+| `scale` | Relaciones de escala entre rangos de corrección (EMA10→55→200) |
+| `compare` | Comparativa consolidada entre timeframes (1D, 4H, 1H) |
+| `report` | Genera reporte consolidado `results/reporte_final.md` |
 
 Puedes combinarlos como quieras:
 
@@ -209,6 +213,10 @@ python fibonacci_analysis.py
 | `hurst.py` | `hurst_{TF}_rs.png`, `hurst_{TF}_valores.txt` |
 | `hilbert_analysis.py` | `hilbert_{TF}_envolvente.png`, `hilbert_{TF}_frecuencia.png`, `hilbert_{TF}_resumen.txt` |
 | `fibonacci_analysis.py` | `fibonacci_{TF}_tiempos.png`, `fibonacci_{TF}_amplitudes.png`, `fibonacci_{TF}_stats.txt` |
+| `correlation_analysis.py` | `correlation_{TF}_ccf.png`, `correlation_{TF}_scatter.png`, `correlation_{TF}_rolling.png`, `correlation_{TF}_stats.txt` |
+| `timeframe_comparison.py` | `comparison_radar.png`, `comparison_scaling.png`, `comparison_summary.md`, `comparison_table.txt` |
+| `scale_analysis.py` | `scale_{TF}_ratios.png`, `scale_{TF}_evolution.png`, `scale_{TF}_table.txt`, `scale_{TF}_validation.txt` |
+| `generate_report.py` | `reporte_final.md` |
 
 `{TF}` = timeframe del archivo: `1D`, `4H` o `1H`
 
@@ -261,5 +269,9 @@ pip install pandas matplotlib scipy
 | `hurst.py` | OK |
 | `hilbert_analysis.py` | OK |
 | `fibonacci_analysis.py` | OK |
+| `correlation_analysis.py` | OK |
+| `timeframe_comparison.py` | OK |
+| `scale_analysis.py` | OK |
+| `generate_report.py` | OK |
 | Documentacion de scripts | OK |
 | Interpretacion final de resultados | pendiente — analisis agnostico externo |
