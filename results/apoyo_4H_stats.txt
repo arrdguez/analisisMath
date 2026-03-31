@@ -1,0 +1,40 @@
+ESTADÍSTICAS DE APOYOS  [4H]
+Filas: 9960 | Rango: 2021-09-13 08:00:00 → 2026-03-31 00:25:00
+Parámetros: ventana_min=5 velas, rebote=10 velas
+============================================================
+
+── Apoyo en EMA10 (713 eventos) ──
+  Profundidad (dist precio → EMA10):
+    mediana = -1.21%
+    p10/p90 = -3.64% / -0.00%
+    p5/p95  = -4.77% / +0.22%
+    p25/p75 = -2.30% / -0.41%
+    min/max = -11.82% / +2.08%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 76.5%
+    mediana rebote     = +1.46%
+    p25/p75 rebote     = +0.10% / +3.32%
+
+── Apoyo en EMA55 (630 eventos) ──
+  Profundidad (dist precio → EMA55):
+    mediana = -1.60%
+    p10/p90 = -7.24% / +2.25%
+    p5/p95  = -9.29% / +4.42%
+    p25/p75 = -4.09% / +0.43%
+    min/max = -22.71% / +11.19%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 80.4%
+    mediana rebote     = +1.65%
+    p25/p75 rebote     = +0.35% / +3.66%
+
+── Apoyo en EMA200 (632 eventos) ──
+  Profundidad (dist precio → EMA200):
+    mediana = -1.81%
+    p10/p90 = -12.10% / +8.08%
+    p5/p95  = -15.00% / +12.01%
+    p25/p75 = -6.70% / +3.23%
+    min/max = -35.82% / +21.86%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 81.1%
+    mediana rebote     = +1.65%
+    p25/p75 rebote     = +0.35% / +3.66%

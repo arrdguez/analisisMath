@@ -1,0 +1,38 @@
+ANÁLISIS FFT — CICLOS DOMINANTES  [1H]
+Filas: 10000 | Rango: 2025-02-07 10:00:00 → 2026-03-31 00:26:00
+============================================================
+
+  dist_p10:
+    #1  83 velas  (0.85% de la energía)
+    #2  40 velas  (0.82% de la energía)
+    #3  111 velas  (0.82% de la energía)
+    #4  84 velas  (0.80% de la energía)
+    #5  45 velas  (0.78% de la energía)
+
+  dist_p55:
+    #1  667 velas  (3.66% de la energía)
+    #2  10000 velas  (3.04% de la energía)
+    #3  455 velas  (2.90% de la energía)
+    #4  323 velas  (2.86% de la energía)
+    #5  476 velas  (2.77% de la energía)
+
+  dist_p200:
+    #1  10000 velas  (21.16% de la energía)
+    #2  2000 velas  (7.64% de la energía)
+    #3  667 velas  (6.83% de la energía)
+    #4  455 velas  (3.70% de la energía)
+    #5  476 velas  (3.70% de la energía)
+
+  dist_10_55:
+    #1  10000 velas  (5.00% de la energía)
+    #2  667 velas  (4.27% de la energía)
+    #3  455 velas  (3.38% de la energía)
+    #4  323 velas  (3.30% de la energía)
+    #5  476 velas  (3.22% de la energía)
+
+  dist_55_200:
+    #1  10000 velas  (31.03% de la energía)
+    #2  2000 velas  (8.77% de la energía)
+    #3  667 velas  (7.44% de la energía)
+    #4  455 velas  (3.78% de la energía)
+    #5  476 velas  (3.76% de la energía)

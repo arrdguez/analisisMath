@@ -1,0 +1,79 @@
+ESTADÍSTICAS DESCRIPTIVAS — 1H
+Filas: 10000 | Rango: 2025-02-07 10:00:00 → 2026-03-31 00:26:00
+============================================================
+
+── Distancias precio → EMA (%) ──
+  dist_p10:
+    media   = -0.017%
+    std     = 0.683
+    p5/p95  = -1.131 / +0.978
+    p25/p75 = -0.290 / +0.294
+    mediana = +0.008
+    min/max = -5.053 / +6.566
+
+  dist_p55:
+    media   = -0.102%
+    std     = 1.661
+    p5/p95  = -2.978 / +2.415
+    p25/p75 = -0.863 / +0.831
+    mediana = -0.039
+    min/max = -12.179 / +9.587
+
+  dist_p200:
+    media   = -0.375%
+    std     = 3.045
+    p5/p95  = -5.830 / +4.328
+    p25/p75 = -2.014 / +1.488
+    mediana = -0.116
+    min/max = -19.236 / +9.011
+
+── Distancias entre EMAs (%) ──
+  dist_10_55:
+    media   = -0.088%
+    std     = 1.263
+    p5/p95  = -2.264 / +1.822
+    p25/p75 = -0.676 / +0.633
+    mediana = -0.035
+    min/max = -8.464 / +5.580
+
+  dist_55_200:
+    media   = -0.287%
+    std     = 1.945
+    p5/p95  = -3.788 / +2.717
+    p25/p75 = -1.280 / +0.960
+    mediana = -0.132
+    min/max = -9.469 / +4.429
+
+── Ratio Armónico ──
+  ratio_armonico (valores extremos recortados a ±5):
+    media   = +0.339
+    std     = 1.753
+    p5/p95  = -2.893 / +3.704
+    p25/p75 = -0.168 / +0.927
+    mediana = +0.313
+
+
+── Pendientes de EMAs (%) ──
+  slope10:
+    media   = -0.016%
+    std     = 0.655
+    p5/p95  = -1.096 / +0.946
+    p25/p75 = -0.283 / +0.294
+    mediana = +0.004
+    min/max = -4.555 / +5.393
+
+  slope55:
+    media   = -0.018%
+    std     = 0.298
+    p5/p95  = -0.536 / +0.438
+    p25/p75 = -0.157 / +0.149
+    mediana = -0.008
+    min/max = -2.098 / +1.606
+
+  slope200:
+    media   = -0.019%
+    std     = 0.151
+    p5/p95  = -0.291 / +0.215
+    p25/p75 = -0.101 / +0.075
+    mediana = -0.005
+    min/max = -0.933 / +0.440

@@ -1,0 +1,38 @@
+ANÁLISIS FFT — CICLOS DOMINANTES  [4H]
+Filas: 9960 | Rango: 2021-09-13 08:00:00 → 2026-03-31 00:25:00
+============================================================
+
+  dist_p10:
+    #1  9960 velas  (9.47% de la energía)
+    #2  83 velas  (0.89% de la energía)
+    #3  498 velas  (0.88% de la energía)
+    #4  84 velas  (0.85% de la energía)
+    #5  82 velas  (0.80% de la energía)
+
+  dist_p55:
+    #1  9960 velas  (31.45% de la energía)
+    #2  498 velas  (3.16% de la energía)
+    #3  1992 velas  (2.22% de la energía)
+    #4  192 velas  (1.75% de la energía)
+    #5  830 velas  (1.53% de la energía)
+
+  dist_p200:
+    #1  9960 velas  (30.21% de la energía)
+    #2  1992 velas  (7.49% de la energía)
+    #3  498 velas  (5.16% de la energía)
+    #4  1660 velas  (4.25% de la energía)
+    #5  830 velas  (3.77% de la energía)
+
+  dist_10_55:
+    #1  9960 velas  (34.31% de la energía)
+    #2  498 velas  (3.54% de la energía)
+    #3  1992 velas  (2.48% de la energía)
+    #4  192 velas  (1.89% de la energía)
+    #5  830 velas  (1.71% de la energía)
+
+  dist_55_200:
+    #1  9960 velas  (20.75% de la energía)
+    #2  1992 velas  (10.86% de la energía)
+    #3  498 velas  (6.80% de la energía)
+    #4  1660 velas  (6.06% de la energía)
+    #5  830 velas  (5.24% de la energía)
