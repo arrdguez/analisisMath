@@ -8,6 +8,8 @@
 ## 🎯 OBJETIVO CENTRAL
 
 > Estudiar matemáticamente un patrón que el trader **YA VE con los ojos** y que le funciona en su sistema de trading real. El objetivo NO es crear un indicador todavía. El objetivo es **describir y medir el fenómeno** de manera objetiva, usando herramientas matemáticas/estadísticas para que lo que se ve visualmente quede formalizado en números.
+El objetivo o uno de ellos es ecnontrar patrones estadisticos que se repitan y crear u obtener una o mas variables que una vez teniendola podamos usarlas para crear un indicador tectino. 
+Se asume que cada mercado y temporalidad sea diferente pero en todas el ser humano está presente y esa comportamiento debe tener una huella, que por minima que sea se desea encontrar y usarla. Muchas veces la magnituda que se busca no es directa si no indirecta. El objetivo es que esta herramienta nos sorva para encontrar variables que luego sean usadas para analizar el mercado, en otras palabras lo que aca hacemos no es perce un analisis del mercado es sun analisis previos para descubri patrones metris variables que luego usaremos para crear una herrmaienta que eso si nos ayudara a leer el mercado. 
 
 ---
 
@@ -15,15 +17,18 @@
 
 El precio, en tendencia alcista, interactúa con tres EMAs (10, 55, 200) de una manera **oscilatoria y jerárquica**:
 
-1. El precio sube **por encima** de la EMA10 y en algún momento **se apoya** en ella (no necesariamente la toca, a veces solo hace el amago y rebota).
-2. Cuando la corrección es mayor, el precio se apoya en la **EMA55**.
+1. El precio sube **por encima** de la EMA10 y en algún momento **se apoya** en ella (no necesariamente la toca, a veces solo hace el amago y rebota o pasa de largo un poco y hace el rebote).
+2. Cuando la corrección es mayor y sigue de paso, el precio se apoya en la **EMA55**, haciendo un poco los mismo que se describio antes en todas las medias.
 3. Las correcciones más grandes llevan el precio hasta la zona de la **EMA200**.
 4. Esto genera un comportamiento de **ondas armónicas**: oscilaciones que convergen y divergen entre las tres medias, como si hubiera una "respiración" del mercado.
 5. En tendencia bajista ocurre lo mismo pero invertido: el precio cae por debajo de las tres medias y rebota hacia arriba hacia ellas.
 6. El patrón es **multi-timeframe**: se ve en 1D, 4H, 1W, 1M.
+7. Se cree que si superponemos todas las ondas, ej hacemos que el precio sea liso el resto de medias hará ondas que formarra ondas constructivas y destructivas y resonará, de modo que cuando todoas convergenen en espacio y tiempo pueden hacer que sea facil y probabilisticamente mas fiable entrar al alza o a la baja. 
 
 ### 🟢 Observación clave del trader:
-> "En el SP500 casi nunca llega a tocar las medias, solo hace el amago pero ese amago es de muchos puntos y se le puede sacar $"
+> "En el SP500 casi nunca llega a tocar las medias, solo hace el amago pero ese amago es de muchos puntos y se le puede sacar $" otros mercados hace lo mismo 
+
+> IMPORTANTE: La herramienta debe ser adnostica no debe estar pensada solo para un mercado o temporalidad. 
 
 Esto implica que **el apoyo no es un toque exacto**, es una **región de intención** donde el precio desacelera y revierte. La distancia mínima al apoyo es en sí misma un dato medible.
 

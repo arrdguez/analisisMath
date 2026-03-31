@@ -244,8 +244,3 @@ Una vez identificadas las fases (impulso, apoyo en EMA10, apoyo en EMA55, apoyo 
 Este plan proporciona una hoja de ruta completa para transformar una observación cualitativa en un modelo cuantificable. La implementación de cada paso debe ser realizada con cuidado, documentando los resultados intermedios para asegurar que el patrón armónico se reproduce de manera consistente.
 
 
-Excelente una ultima peticion puede que mabisiosa.
-Quiero que despues de los analisis se gener una especi de reporte final el cual se lo pasaré a una ia matematica.
-Debe contener antecedentes de los datos iniciales (como los obtuve trading view pero que son ), cuales y que parametros se usaron para cada analisis y claro resultados numericos para y al final un prompt para que lea todo y llegue a una conculisom
-te recuerdo que esto lo usaré ahora para detectar cosas magnitudes comporamientos d variables que se repitan para poder con eso hacer un script en pinescript.
-Esto es solo el comineso entindes que hacer?git 

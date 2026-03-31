@@ -77,23 +77,39 @@ def parse_date(iso_str: str) -> str:
 
 def is_data_row(message: str) -> bool:
     """
-    Filtra las filas válidas del log principal (empiezan con ';').
+    Filtra las filas válidas del log principal.
+    Soporta:
+      - Formato antiguo: empieza con ';'
+      - Formato nuevo: empieza directamente con el valor de 'close'
     Descarta las filas del barstate.islast (formato 'HH:mm:ss,close,...').
     """
-    return message.startswith(';')
+    msg = message.strip().strip('"')
+    # Formato antiguo: claramente identificado por ';'
+    if msg.startswith(';'):
+        return True
+    
+    # Formato nuevo: debe tener al menos 10 separadores (';') y el primero debe ser numérico
+    # (close suele ser un número positivo > 0)
+    parts = msg.split(';')
+    if len(parts) >= 10:
+        first_val = parse_number(parts[0])
+        return first_val is not None
+        
+    return False
 
 
 def parse_message(message: str) -> list:
     """
     Parsea el campo Message del CSV de TradingView.
-    Input:  ';5,430;4,688.223;NaN;NaN;15.822;NaN;...'
-    Output: [5430.0, 4688.223, None, None, 15.822, None, ...]
+    Input:  ';5,430;4,688.223;NaN;...'  O  '5,430;4,688.223;NaN;...'
+    Output: [5430.0, 4688.223, None, ...]
     """
     # Quitar comillas externas si las hay
     message = message.strip().strip('"')
-    # Quitar el ';' inicial
+    # Quitar el ';' inicial si existe
     if message.startswith(';'):
         message = message[1:]
+    
     parts = message.split(';')
     return [parse_number(p) for p in parts]
 

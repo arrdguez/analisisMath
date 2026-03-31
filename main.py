@@ -51,7 +51,7 @@ COLUMNAS_REQUERIDAS = {
 # Columnas mínimas que debe tener un CSV crudo de TradingView
 COLUMNAS_CRUDAS = {'Date', 'Message'}
 
-PASOS_DISPONIBLES = ['parse', 'explore', 'fft', 'apoyos', 'hurst', 'hilbert', 'fibonacci']
+PASOS_DISPONIBLES = ['parse', 'explore', 'fft', 'apoyos', 'hurst', 'hilbert', 'fibonacci', 'report']
 
 SEP  = '=' * 60
 SEP2 = '-' * 60
@@ -272,6 +272,7 @@ def main():
         'hurst':     ('hurst',            'Exponente de Hurst'),
         'hilbert':   ('hilbert_analysis', 'Transformada de Hilbert'),
         'fibonacci': ('fibonacci_analysis','Ratios de Fibonacci'),
+        'report':    ('generate_report',  'Generacion de reporte maestro para IA'),
     }
 
     num = 2 if 'parse' in pasos else 1

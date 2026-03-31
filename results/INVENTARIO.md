@@ -9,9 +9,7 @@ y cómo leerlo.
 
 | Archivo | Qué contiene |
 |---------|-------------|
-| `1D-btc-pine-logs-..._clean.csv` | Datos diarios BTC limpiados. 2906 filas. Rango 2018→2026 |
-| `1h-btc-pine-logs-..._clean.csv` | Datos horarios BTC limpiados. 10000 filas. Rango 2025→2026 |
-| `4h-btc-pine-logs-..._clean.csv` | Datos 4 horas BTC limpiados. 9960 filas. Rango 2021→2026 |
+| `*_clean.csv` | Datos limpiados y listos para análisis. |
 
 **Columnas:** `date, close, ema10, ema55, ema200, dist_p10, dist_p55, dist_p200, slope10, slope55, slope200, dist_10_55, dist_55_200, ratio_armonico`
 
@@ -22,19 +20,13 @@ y cómo leerlo.
 ### Imágenes
 | Archivo | Qué muestra | Cómo leerlo |
 |---------|-------------|-------------|
-| `explore_1D_distancias.png` | Serie temporal + histograma de dist_p10/55/200 en 1D | Verde = precio sobre EMA, rojo = bajo. Histograma: línea cyan = mediana, naranja = p5/p95 |
-| `explore_1D_ratio.png` | dist_10_55, dist_55_200 y ratio_armonico en 1D | Positivo = estructura alcista. Ratio negativo = estructura mixta |
-| `explore_4H_distancias.png` | Idem en 4H | Igual que 1D |
-| `explore_4H_ratio.png` | Idem en 4H | Igual que 1D |
-| `explore_1H_distancias.png` | Idem en 1H | Igual que 1D |
-| `explore_1H_ratio.png` | Idem en 1H | Igual que 1D |
+| `explore_{TF}_distancias.png` | Serie temporal + histograma de dist_p10/55/200 | Verde = precio sobre EMA, rojo = bajo. Histograma: línea cyan = mediana, naranja = p5/p95 |
+| `explore_{TF}_ratio.png` | dist_10_55, dist_55_200 y ratio_armonico | Positivo = estructura alcista. Ratio negativo = estructura mixta |
 
 ### Textos
 | Archivo | Qué contiene | Cómo leerlo |
 |---------|-------------|-------------|
-| `explore_1D_stats.txt` | Percentiles de todas las variables en 1D | p25/p75 = zona normal. p5/p95 = extremos poco frecuentes |
-| `explore_4H_stats.txt` | Idem en 4H | Igual |
-| `explore_1H_stats.txt` | Idem en 1H | Igual |
+| `explore_{TF}_stats.txt` | Percentiles de todas las variables | p25/p75 = zona normal. p5/p95 = extremos poco frecuentes |
 
 ---
 
@@ -43,16 +35,12 @@ y cómo leerlo.
 ### Imágenes
 | Archivo | Qué muestra | Cómo leerlo |
 |---------|-------------|-------------|
-| `fft_1D_espectro.png` | Espectro de potencia de las 5 variables en 1D | Pico = ciclo real. Espectro plano = ruido. Eje X = duración en velas (escala log) |
-| `fft_4H_espectro.png` | Idem en 4H | Igual |
-| `fft_1H_espectro.png` | Idem en 1H | Igual |
+| `fft_{TF}_espectro.png` | Espectro de potencia de las 5 variables | Pico = ciclo real. Espectro plano = ruido. Eje X = duración en velas (escala log) |
 
 ### Textos
 | Archivo | Qué contiene | Cómo leerlo |
 |---------|-------------|-------------|
-| `fft_1D_ciclos.txt` | Top 5 ciclos dominantes por variable en 1D | `N velas (X%)` → si X > 10% el ciclo es muy fuerte. Convertir a días: 1D×1, 4H×0.167, 1H×0.042 |
-| `fft_4H_ciclos.txt` | Idem en 4H | Igual |
-| `fft_1H_ciclos.txt` | Idem en 1H | Igual |
+| `fft_{TF}_ciclos.txt` | Top 5 ciclos dominantes por variable | `N velas (X%)` → si X > 10% el ciclo es muy fuerte. Convertir a días: 1D×1, 4H×0.167, 1H×0.042 |
 
 ---
 
@@ -61,31 +49,67 @@ y cómo leerlo.
 ### Imágenes
 | Archivo | Qué muestra | Cómo leerlo |
 |---------|-------------|-------------|
-| `apoyo_1D_detalle.png` | Apoyos históricos en EMA10/55/200 marcados sobre la serie | Puntos de color = evento de apoyo. Líneas horizontales = percentiles de profundidad |
-| `apoyo_1D_rebote.png` | Distribución del rebote 10 velas después del apoyo | Derecha del cero = subió. Línea cyan = mediana. El título dice la tasa de éxito |
-| `apoyo_4H_detalle.png` | Idem en 4H | Igual |
-| `apoyo_4H_rebote.png` | Idem en 4H | Igual |
-| `apoyo_1H_detalle.png` | Idem en 1H | Igual |
-| `apoyo_1H_rebote.png` | Idem en 1H | Igual |
+| `apoyo_{TF}_detalle.png` | Apoyos históricos en EMA10/55/200 marcados sobre la serie | Puntos de color = evento de apoyo. Líneas horizontales = percentiles de profundidad |
+| `apoyo_{TF}_rebote.png` | Distribución del rebote 10 velas después del apoyo | Derecha del cero = subió. Línea cyan = mediana. El título dice la tasa de éxito |
 
 ### Textos
 | Archivo | Qué contiene | Cómo leerlo |
 |---------|-------------|-------------|
-| `apoyo_1D_stats.txt` | Profundidad y rebote de cada apoyo en 1D | Mediana profundidad = distancia típica. Tasa éxito = % que rebotó |
-| `apoyo_4H_stats.txt` | Idem en 4H | Igual |
-| `apoyo_1H_stats.txt` | Idem en 1H | Igual |
+| `apoyo_{TF}_stats.txt` | Profundidad y rebote de cada apoyo | Mediana profundidad = distancia típica. Tasa éxito = % que rebotó |
+
+---
+
+## 🧠 Exponente de Hurst (generados por `hurst.py`)
+
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `hurst_{TF}_rs.png` | Gráfica del análisis R/S (Rescaled Range) | Pendiente de la línea = valor de H. Compara con H=0.5 (aleatorio) |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `hurst_{TF}_valores.txt` | Un valor H por cada variable de distancia | H > 0.5 = persistente (memoria), H < 0.5 = anti-persistente (revierte) |
+
+---
+
+## 🌊 Transformada de Hilbert (generados por `hilbert_analysis.py`)
+
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `hilbert_{TF}_envolvente.png` | Amplitud instantánea de las oscilaciones | Muestra cómo crece o decrece la "fuerza" de la oscilación en el tiempo |
+| `hilbert_{TF}_frecuencia.png` | Período instantáneo (duración del ciclo actual) | Muestra si el mercado se está acelerando (ciclos cortos) o frenando (ciclos largos) |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `hilbert_{TF}_resumen.txt` | Estadísticas de amplitud y período típicos | Amplitud media y variabilidad del ciclo (rango p25/p75) |
+
+---
+
+## 📐 Análisis de Fibonacci (generados por `fibonacci_analysis.py`)
+
+### Imágenes
+| Archivo | Qué muestra | Cómo leerlo |
+|---------|-------------|-------------|
+| `fibonacci_{TF}_tiempos.png` | Histograma de ratios de tiempo entre apoyos | ¿Los apoyos ocurren en proporciones de 0.618 o 1.618? |
+| `fibonacci_{TF}_amplitudes.png` | Histograma de ratios de retroceso (valle/pico) | ¿Las correcciones frenan en niveles Fib (0.382, 0.5, 0.618)? |
+
+### Textos
+| Archivo | Qué contiene | Cómo leerlo |
+|---------|-------------|-------------|
+| `fibonacci_{TF}_stats.txt` | Resumen de proximidad a niveles Fibonacci | Indica qué nivel Fib es el más cercano a la mediana de los datos |
 
 ---
 
 ## 🔄 Cuándo regenerar los archivos
 
 Todos los archivos de esta carpeta son **outputs reproducibles**. Si borras cualquiera,
-se puede regenerar corriendo el script correspondiente.
+se puede regenerar corriendo el script correspondiente o `main.py`.
 
 | Si cambias... | Vuelve a correr... |
 |--------------|-------------------|
-| Datos en `data/` | `parse_csv.py` → luego todos los demás |
-| Solo quieres actualizar gráficas | `explore.py` |
-| Solo quieres actualizar ciclos | `fft_analysis.py` |
-| Solo quieres actualizar apoyos | `apoyo_stats.py` |
-| Todo desde cero | `python parse_csv.py && python explore.py && python fft_analysis.py && python apoyo_stats.py` |
+| Datos en `data/` | `python main.py --pasos parse` → luego todos los demás |
+| Solo quieres actualizar un análisis | `python main.py --pasos <nombre_paso>` |
+| Todo desde cero | `python main.py` |
