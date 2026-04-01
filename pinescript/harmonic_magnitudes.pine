@@ -1,0 +1,212 @@
+//@version=6
+indicator(title="Magnitudes Armónicas EMAs 10-55-200", shorttitle="Harmonic Magnitudes", overlay=true, max_lines_count=500, max_labels_count=500)
+
+// ======================
+// PARÁMETROS CONFIGURABLES
+// ======================
+
+// Profundidades de apoyo (porcentajes negativos)
+input_depth_ema10 = input.float(-3.45, "Profundidad EMA10 (%)", minval=-30.0, maxval=0.0, step=0.01, tooltip="Profundidad mediana histórica de apoyo: -3.45%")
+input_depth_ema55 = input.float(-4.03, "Profundidad EMA55 (%)", minval=-50.0, maxval=0.0, step=0.01, tooltip="Profundidad mediana histórica de apoyo: -4.03%")
+input_depth_ema200 = input.float(-1.02, "Profundidad EMA200 (%)", minval=-60.0, maxval=0.0, step=0.01, tooltip="Profundidad mediana histórica de apoyo: -1.02%")
+
+// Ratio armónico (valor normal y tolerancia)
+input_ratio_normal = input.float(0.306, "Ratio armónico normal", minval=0.0, maxval=2.0, step=0.001, tooltip="Mediana histórica del ratio dist_10_55 / dist_55_200")
+input_ratio_tolerance = input.float(0.3, "Tolerancia ratio (±%)", minval=0.05, maxval=1.0, step=0.05, tooltip="Desviación permitida respecto al valor normal (ej: 0.3 = ±30%)")
+
+// Detección de mínimos locales
+input_window_min = input.int(5, "Ventana mínimo local", minval=3, maxval=20, tooltip="Número de velas a cada lado para detectar mínimo local")
+input_confirmation_bars = input.int(10, "Velas confirmación rebote", minval=5, maxval=50, tooltip="Número de velas para confirmar rebote después del mínimo")
+input_rebound_percent = input.float(2.0, "Rebote confirmación (%)", minval=0.5, maxval=10.0, step=0.1, tooltip="Porcentaje mínimo de subida para confirmar rebote")
+
+// Visualización
+input_show_zones = input.bool(true, "Mostrar zonas de apoyo")
+input_show_panel = input.bool(true, "Mostrar panel de métricas")
+input_show_alerts = input.bool(true, "Mostrar alertas visuales")
+input_zone_opacity = input.int(70, "Opacidad zonas (%)", minval=10, maxval=90)
+
+// Colores
+color_ema10 = input.color(color.new(#2962FF, 0), "Color EMA10")
+color_ema55 = input.color(color.new(#FF6D00, 0), "Color EMA55")
+color_ema200 = input.color(color.new(#00C853, 0), "Color EMA200")
+color_support10 = input.color(color.new(#2962FF, input_zone_opacity), "Color zona EMA10")
+color_support55 = input.color(color.new(#FF6D00, input_zone_opacity), "Color zona EMA55")
+color_support200 = input.color(color.new(#00C853, input_zone_opacity), "Color zona EMA200")
+color_panel_bg = input.color(color.new(#1E1E1E, 85), "Fondo panel")
+color_panel_text = input.color(color.new(#FFFFFF, 0), "Texto panel")
+
+// ======================
+// CÁLCULOS DE EMAs y DISTANCIAS
+// ======================
+
+// EMAs
+ema10 = ta.ema(close, 10)
+ema55 = ta.ema(close, 55)
+ema200 = ta.ema(close, 200)
+
+// Distancias porcentuales (precio respecto a EMA)
+dist_p10 = (close - ema10) / ema10 * 100
+dist_p55 = (close - ema55) / ema55 * 100
+dist_p200 = (close - ema200) / ema200 * 100
+
+// Distancias entre EMAs (para ratio armónico)
+dist_10_55 = dist_p10 - dist_p55  // equivalente a (close/ema10 - close/ema55)*100
+dist_55_200 = dist_p55 - dist_p200
+
+// Ratio armónico (con protección división por cero)
+ratio_harmonic = dist_55_200 != 0 ? dist_10_55 / dist_55_200 : na
+
+// Filtro de ratio (cercano al valor normal)
+ratio_deviation = math.abs(ratio_harmonic - input_ratio_normal) / math.abs(input_ratio_normal)
+ratio_ok = ratio_deviation <= input_ratio_tolerance
+
+// ======================
+// ZONAS DE APOYO (líneas horizontales)
+// ======================
+
+// Niveles de apoyo (EMA * (1 + profundidad%))
+// Nota: profundidades son negativas, por ejemplo -3.45% => multiplicador = 1 - 0.0345 = 0.9655
+support_level_10 = ema10 * (1 + input_depth_ema10 / 100)
+support_level_55 = ema55 * (1 + input_depth_ema55 / 100)
+support_level_200 = ema200 * (1 + input_depth_ema200 / 100)
+
+// Dibujar zonas de apoyo (líneas horizontales persistentes)
+var line line_zone10 = na
+var line line_zone55 = na
+var line line_zone200 = na
+
+if input_show_zones
+    if na(line_zone10)
+        line_zone10 := line.new(bar_index, support_level_10, bar_index + 1, support_level_10, color=color_support10, width=1, style=line.style_dashed, extend=extend.right)
+    else
+        line.set_xy1(line_zone10, bar_index, support_level_10)
+        line.set_xy2(line_zone10, bar_index + 1, support_level_10)
+        line.set_extend(line_zone10, extend.right)
+    
+    if na(line_zone55)
+        line_zone55 := line.new(bar_index, support_level_55, bar_index + 1, support_level_55, color=color_support55, width=1, style=line.style_dashed, extend=extend.right)
+    else
+        line.set_xy1(line_zone55, bar_index, support_level_55)
+        line.set_xy2(line_zone55, bar_index + 1, support_level_55)
+        line.set_extend(line_zone55, extend.right)
+    
+    if na(line_zone200)
+        line_zone200 := line.new(bar_index, support_level_200, bar_index + 1, support_level_200, color=color_support200, width=1, style=line.style_dashed, extend=extend.right)
+    else
+        line.set_xy1(line_zone200, bar_index, support_level_200)
+        line.set_xy2(line_zone200, bar_index + 1, support_level_200)
+        line.set_extend(line_zone200, extend.right)
+
+// ======================
+// DETECCIÓN DE APOYOS REALES (MÍNIMOS LOCALES)
+// ======================
+
+// Detección de mínimo local usando ventana centrada
+// window_min debe ser impar para tener un centro claro
+window_min = input_window_min % 2 == 0 ? input_window_min + 1 : input_window_min  // asegurar impar
+window_center = math.floor(window_min / 2)
+
+// Función: detecta si el valor en el centro de la ventana es el mínimo de la ventana
+// Nota: hay un retraso de window_center velas para confirmación
+detect_local_min(series, window, center) =>
+    lowest_val = ta.lowest(series, window)
+    series[center] == lowest_val
+
+// Mínimos locales en distancias (con retraso de window_center velas)
+local_min_10 = detect_local_min(dist_p10, window_min, window_center)
+local_min_55 = detect_local_min(dist_p55, window_min, window_center)
+local_min_200 = detect_local_min(dist_p200, window_min, window_center)
+
+// Confirmación de rebote: precio sube X% después del mínimo (usando retraso window_center)
+// El mínimo detectado ocurrió window_center velas atrás
+rebound_percent = input_rebound_percent  // % mínimo de subida para confirmar rebote
+price_increase_10 = close > close[window_center] * (1 + rebound_percent / 100)
+price_increase_55 = close > close[window_center] * (1 + rebound_percent / 100)
+price_increase_200 = close > close[window_center] * (1 + rebound_percent / 100)
+
+// Señales de apoyo confirmadas (alineadas temporalmente)
+support_signal_10 = local_min_10 and price_increase_10
+support_signal_55 = local_min_55 and price_increase_55
+support_signal_200 = local_min_200 and price_increase_200
+
+// ======================
+// PANEL DE MÉTRICAS
+// ======================
+
+if input_show_panel
+    // Estado del ciclo (impulso vs corrección)
+    slope_dist10 = ta.linreg(dist_p10, 5, 0) - ta.linreg(dist_p10, 5, 1)
+    cycle_state = slope_dist10 > 0 ? "IMPULSO" : "CORRECCIÓN"
+    
+    // Ratio de escala 55/10 (si dist_p10 != 0)
+    scale_ratio_55_10 = dist_p10 != 0 ? dist_p55 / dist_p10 : na
+    
+    // Crear texto del panel
+    panel_text = "┌─────────────────────────────┐\n" +
+                 "│ MAGNITUDES ARMÓNICAS (1D)   │\n" +
+                 "├─────────────────────────────┤\n" +
+                 "│ Distancia a EMA10:  " + str.tostring(dist_p10, "#.##") + "%  │\n" +
+                 "│ Distancia a EMA55:  " + str.tostring(dist_p55, "#.##") + "%  │\n" +
+                 "│ Distancia a EMA200: " + str.tostring(dist_p200, "#.##") + "%  │\n" +
+                 "│ Ratio armónico:     " + str.tostring(ratio_harmonic, "#.###") + "   │\n" +
+                 "│ Filtro ratio:       " + (ratio_ok ? "OK" : "NO OK") + "       │\n" +
+                 "│ Estado ciclo:       " + cycle_state + "   │\n" +
+                 "│ Ratio escala 55/10: " + str.tostring(scale_ratio_55_10, "#.##") + "   │\n" +
+                 "│ Mín local EMA10:    " + (local_min_10 ? "SÍ" : "NO") + "      │\n" +
+                 "│ Mín local EMA55:    " + (local_min_55 ? "SÍ" : "NO") + "      │\n" +
+                 "│ Mín local EMA200:   " + (local_min_200 ? "SÍ" : "NO") + "      │\n" +
+                 "└─────────────────────────────┘"
+    
+    // Dibujar etiqueta del panel (esquina superior derecha)
+    var label panel_label = label.new(x=bar_index, y=na, text=panel_text, 
+                                      style=label.style_label_left, color=color_panel_bg, textcolor=color_panel_text,
+                                      size=size.small, textalign=text.align_left)
+    label.set_xy(panel_label, bar_index, high * 1.01)
+    label.set_x(panel_label, bar_index)
+
+// ======================
+// ALERTAS VISUALES
+// ======================
+
+if input_show_alerts
+    // Alerta: precio entra en zona de apoyo EMA10
+    if dist_p10 <= input_depth_ema10
+        label.new(bar_index, low, "ZONA EMA10", color=color.red, style=label.style_label_down, textcolor=color.white, size=size.small)
+    
+    // Alerta: precio entra en zona de apoyo EMA55
+    if dist_p55 <= input_depth_ema55
+        label.new(bar_index, low, "ZONA EMA55", color=color.orange, style=label.style_label_down, textcolor=color.white, size=size.small)
+    
+    // Alerta: precio entra en zona de apoyo EMA200
+    if dist_p200 <= input_depth_ema200
+        label.new(bar_index, low, "ZONA EMA200", color=color.green, style=label.style_label_down, textcolor=color.white, size=size.small)
+    
+    // Alerta: ratio armónico dentro de rango normal
+    if ratio_ok
+        label.new(bar_index, high, "RATIO OK", color=color.blue, style=label.style_label_up, textcolor=color.white, size=size.small)
+    
+    // Alerta: apoyo confirmado (mínimo local + rebote)
+    if support_signal_10
+        label.new(bar_index, low, "APOYO EMA10", color=color_support10, style=label.style_label_down, textcolor=color.white, size=size.small)
+    if support_signal_55
+        label.new(bar_index, low, "APOYO EMA55", color=color_support55, style=label.style_label_down, textcolor=color.white, size=size.small)
+    if support_signal_200
+        label.new(bar_index, low, "APOYO EMA200", color=color_support200, style=label.style_label_down, textcolor=color.white, size=size.small)
+
+// ======================
+// PLOT DE EMAs (opcional)
+// ======================
+plot(ema10, color=color_ema10, linewidth=1, title="EMA10")
+plot(ema55, color=color_ema55, linewidth=1, title="EMA55")
+plot(ema200, color=color_ema200, linewidth=1, title="EMA200")
+
+// ======================
+// ALERTAS DE TRADINGVIEW
+// ======================
+alertcondition(dist_p10 <= input_depth_ema10, title="Precio en zona EMA10", message="Precio ha entrado en zona de apoyo EMA10")
+alertcondition(dist_p55 <= input_depth_ema55, title="Precio en zona EMA55", message="Precio ha entrado en zona de apoyo EMA55")
+alertcondition(dist_p200 <= input_depth_ema200, title="Precio en zona EMA200", message="Precio ha entrado en zona de apoyo EMA200")
+alertcondition(ratio_ok, title="Ratio armónico OK", message="Ratio armónico dentro de rango normal")
+alertcondition(support_signal_10, title="Apoyo confirmado EMA10", message="Apoyo confirmado en EMA10: mínimo local + rebote")
+alertcondition(support_signal_55, title="Apoyo confirmado EMA55", message="Apoyo confirmado en EMA55: mínimo local + rebote")
+alertcondition(support_signal_200, title="Apoyo confirmado EMA200", message="Apoyo confirmado en EMA200: mínimo local + rebote")
