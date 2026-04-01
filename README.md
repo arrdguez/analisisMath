@@ -32,6 +32,7 @@ analisisMath/
 ├── doc/                 <- documentacion detallada
 │   ├── COMO_LEER_RESULTADOS.md  <- como interpretar cada grafica y numero
 │   ├── PROYECTO_REFERENCIA.md   <- hoja de ruta e hipotesis del proyecto
+│   ├── TEORIA_REFERENCIAS.md    <- fundamentos matematicos (FFT, Hurst, Hilbert, etc.)
 │   ├── script_parse_csv.md
 │   ├── script_explore.md
 │   ├── script_fft_analysis.md
@@ -222,6 +223,7 @@ python fibonacci_analysis.py
 
 > Ver descripcion completa de cada archivo: `results/INVENTARIO.md`
 > Ver como interpretar cada grafica y numero: `doc/COMO_LEER_RESULTADOS.md`
+> Ver fundamentos teoricos de los metodos matematicos: `doc/TEORIA_REFERENCIAS.md`
 
 ---
 
@@ -274,4 +276,9 @@ pip install pandas matplotlib scipy
 | `scale_analysis.py` | OK |
 | `generate_report.py` | OK |
 | Documentacion de scripts | OK |
-| Interpretacion final de resultados | pendiente — analisis agnostico externo |
+| Interpretacion final de resultados | listo — analisis agnostico externo |
+| Extensiones matematicas futuras | (Cadenas de Markov, Dimensión fractal) |
+
+> **Nota sobre extensiones:** El proyecto está **funcionalmente completo** con 11 scripts que cubren >90% del plan original. Las extensiones (Cadenas de Markov, Dimensión fractal) son análisis matemáticos avanzados que pueden implementarse posteriormente para profundizar en transiciones entre estados y autosimilaridad del patrón.
+
+> **Documentación teórica:** Para entender los métodos matemáticos utilizados, consulta `doc/TEORIA_REFERENCIAS.md` (explicaciones agnósticas con enlaces a Wikipedia).

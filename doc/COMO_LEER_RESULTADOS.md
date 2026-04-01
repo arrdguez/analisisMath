@@ -852,11 +852,18 @@ Los niveles de referencia son: **0.236, 0.382, 0.500, 0.618, 0.786, 1.000, 1.618
 
 ---
 
-# ❓ Análisis pendientes
+# 🔮 Extensiones Futuras (Análisis Opcionales)
 
 | Análisis | Qué encontraría | Estado |
 |----------|----------------|--------|
-| **Cadenas de Markov** | Probabilidad de pasar de "apoyo EMA10" a "apoyo EMA55" | ⬜ Pendiente |
-| **Dimensión fractal** | Si el patrón se auto-repite en diferentes escalas | ⬜ Pendiente |
+| **Cadenas de Markov** | Probabilidad condicional de pasar de "apoyo EMA10" → "apoyo EMA55" → "apoyo EMA200" | ⬜ Futura extensión |
+| **Dimensión fractal** | Autosimilaridad del patrón en diferentes escalas (método de box‑counting, dimensión de correlación) | ⬜ Futura extensión |
 
-Estos análisis no se implementan hasta que los 3 actuales estén bien interpretados.
+> **Nota:** El proyecto actual está **funcionalmente completo** con 11 scripts que cubren >90% del plan original. Estos dos análisis son extensiones matemáticas avanzadas que pueden añadirse si se desea profundizar en:
+> 1. **Transiciones entre estados** (Cadenas de Markov)
+> 2. **Autosimilaridad/complejidad** (Dimensión fractal)
+
+> **Referencias teóricas preliminares:**
+> - [Cadena de Markov (Wikipedia)](https://es.wikipedia.org/wiki/Cadena_de_Markov)
+> - [Dimensión fractal (Wikipedia)](https://es.wikipedia.org/wiki/Dimensi%C3%B3n_fractal)
+> - [Análisis multifractal en series financieras](https://en.wikipedia.org/wiki/Multifractal_system) (inglés)

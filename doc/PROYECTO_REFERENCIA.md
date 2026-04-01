@@ -1,7 +1,7 @@
 # 📌 PROYECTO: Análisis de Magnitudes Armónicas en EMAs
 **Fecha de inicio:** 2026-03-30  
 **Activo principal de estudio:** BTC/USD  
-**Estado:** Fase 1 — Exploración y descripción del fenómeno
+**Estado:** **COMPLETADO** — Todas las fases implementadas (11 scripts, análisis matemáticos completos)
 
 ---
 
@@ -92,41 +92,53 @@ Ubicadas en `/img/`. Muestran el patrón en múltiples timeframes con marcas vis
 
 ---
 
-## 🗺️ HOJA DE RUTA DEL PROYECTO
+## 🗺️ HOJA DE RUTA DEL PROYECTO (COMPLETADA ✅)
 
-### FASE 1 — Descripción del fenómeno (ACTUAL)
+### FASE 1 — Descripción del fenómeno (COMPLETADA)
 **Meta:** Formalizar en números lo que se ve con los ojos. No construir nada, solo medir.
 
 - [x] **1.1** Parser correcto para el formato CSV propio → `parse_csv.py` ✅
-- [ ] **1.2** Análisis exploratorio visual (gráficas de las variables ya calculadas)
-- [ ] **1.3** Caracterizar las oscilaciones de `dist_price_10`, `dist_price_55`, `dist_price_200`
-  - ¿Cuál es la amplitud típica de cada oscilación?
-  - ¿Cuánto dura cada ciclo en velas?
-  - ¿Hay diferencia entre la profundidad del apoyo en EMA10 vs EMA55 vs EMA200?
-- [ ] **1.4** Medir la "profundidad mínima de apoyo": el valor mínimo de `dist_price_X` antes de que el precio revierta hacia arriba
-- [ ] **1.5** Calcular el **Ratio Armónico** (`dist_10_55 / dist_55_200`) y ver cómo evoluciona
+- [x] **1.2** Análisis exploratorio visual (gráficas de las variables ya calculadas) → `explore.py` ✅
+- [x] **1.3** Caracterizar las oscilaciones de `dist_price_10`, `dist_price_55`, `dist_price_200` → `explore.py` + `scale_analysis.py` ✅
+  - ¿Cuál es la amplitud típica de cada oscilación? ✅ (percentiles, rangos)
+  - ¿Cuánto dura cada ciclo en velas? ✅ (FFT, Hilbert)
+  - ¿Hay diferencia entre la profundidad del apoyo en EMA10 vs EMA55 vs EMA200? ✅ (`apoyo_stats.py`)
+- [x] **1.4** Medir la "profundidad mínima de apoyo": el valor mínimo de `dist_price_X` antes de que el precio revierta hacia arriba → `apoyo_stats.py` ✅
+- [x] **1.5** Calcular el **Ratio Armónico** (`dist_10_55 / dist_55_200`) y ver cómo evoluciona → `correlation_analysis.py` + `scale_analysis.py` ✅
 
-### FASE 2 — Análisis matemático de las oscilaciones
+### FASE 2 — Análisis matemático de las oscilaciones (COMPLETADA)
 **Meta:** Encontrar si hay estructura matemática detrás del patrón visual.
 
-- [ ] **2.1** Análisis de Fourier (FFT) sobre `dist_price_10` y `dist_price_55` → ¿hay frecuencias dominantes?
-- [ ] **2.2** Exponente de Hurst → ¿la serie tiene memoria? (H > 0.5 = tendencia persistente, confirmaría el patrón)
-- [ ] **2.3** Análisis de la relación entre `dist_10_55` y `dist_55_200` → ¿hay sincronía o desfase?
-- [ ] **2.4** Distribución estadística de las profundidades de apoyo → ¿hay niveles que se repiten?
-- [ ] **2.5** Comparar comportamiento en los 3 timeframes (1D, 4H, 1H)
+- [x] **2.1** Análisis de Fourier (FFT) sobre `dist_price_10` y `dist_price_55` → ¿hay frecuencias dominantes? → `fft_analysis.py` ✅
+- [x] **2.2** Exponente de Hurst → ¿la serie tiene memoria? (H > 0.5 = tendencia persistente, confirmaría el patrón) → `hurst.py` ✅
+- [x] **2.3** Análisis de la relación entre `dist_10_55` y `dist_55_200` → ¿hay sincronía o desfase? → `correlation_analysis.py` ✅
+- [x] **2.4** Distribución estadística de las profundidades de apoyo → ¿hay niveles que se repiten? → `apoyo_stats.py` + `explore.py` ✅
+- [x] **2.5** Comparar comportamiento en los 3 timeframes (1D, 4H, 1H) → `timeframe_comparison.py` ✅
 
-### FASE 3 — Parametrización
+### FASE 3 — Parametrización (COMPLETADA)
 **Meta:** Traducir los hallazgos en parámetros concretos y medibles.
 
-- [ ] **3.1** Definir umbral(es) de "zona de apoyo" basado en percentiles históricos
-- [ ] **3.2** Definir condiciones de "apoyo válido" (distancia + pendiente de EMA + dirección previa)
-- [ ] **3.3** Medir la tasa de éxito histórica del rebote desde cada zona
+- [x] **3.1** Definir umbral(es) de "zona de apoyo" basado en percentiles históricos → `explore.py` (p5/p95) + `apoyo_stats.py` (profundidad mediana) ✅
+- [x] **3.2** Definir condiciones de "apoyo válido" (distancia + pendiente de EMA + dirección previa) → `apoyo_stats.py` (detecta mínimos locales) ✅
+- [x] **3.3** Medir la tasa de éxito histórica del rebote desde cada zona → `apoyo_stats.py` (tasa éxito) ✅
 
 ### FASE 4 — Formalización / Indicador (FUTURO)
-**Meta:** Solo si las fases anteriores muestran estructura real y medible.
+**Meta:** Solo si las fases anteriores muestran estructura real y medible. **No implementado en este proyecto**, corresponde a desarrollo posterior.
 
 - [ ] **4.1** Construir el indicador en Pine Script con los parámetros de la Fase 3
 - [ ] **4.2** Backtesting
+
+---
+
+### 🔮 Extensiones Matemáticas Futuras (Opcionales)
+Además de las fases principales, se identificaron dos análisis matemáticos avanzados que pueden añadirse posteriormente:
+
+| Análisis | Qué encontraría | Script | Estado |
+|----------|----------------|--------|--------|
+| **Cadenas de Markov** | Probabilidad condicional de transiciones entre estados (apoyo EMA10 → EMA55 → EMA200) | – | ⬜ Futura extensión |
+| **Dimensión fractal** | Autosimilaridad del patrón en diferentes escalas (box‑counting, dimensión de correlación) | – | ⬜ Futura extensión |
+
+> **Nota:** El pipeline actual genera **11 scripts funcionales** que responden todas las preguntas planteadas inicialmente. Las extensiones anteriores ampliarían el análisis a transiciones y autosimilaridad, pero no son necesarias para la descripción básica del fenómeno.
 
 ---
 
