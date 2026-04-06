@@ -1,0 +1,28 @@
+TABLA DE RATIOS DE ESCALA  [pine-logs-Calculador de Magnitudes Armónicas (4)]
+======================================================================
+
+── ESTADÍSTICAS DE DISTANCIAS ──
+Variable       | Mediana(abs) |   p25   |   p75   |  Rango  |   Media  |
+-------------- | ------------ | ------- | ------- | ------- | -------- |
+dist_p10      |        2.34% |   -2.08% |    2.64% |    4.72% |     0.31% |
+dist_p55      |        7.72% |   -6.22% |    9.69% |   15.91% |     1.95% |
+dist_p200     |       17.11% |  -13.09% |   21.74% |   34.84% |     7.36% |
+
+── RATIOS EMPÍRICOS ──
+Usando medianas de valores absolutos:
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  3.31 | x3                | 0.306     |
+200/55    |  2.22 | x2                | 0.216     |
+200/10    |  7.33 | x6                | 1.325     |
+
+Usando rangos intercuartiles (p75-p25):
+Ratio      | Valor | Escala más cercana | Distancia |
+---------- | ----- | ----------------- | --------- |
+55/10     |  3.37 | x3                | 0.368     |
+200/55    |  2.19 | x2                | 0.190     |
+200/10    |  7.37 | x6                | 1.375     |
+
+── INTERPRETACIÓN ──
+Distancias pequeñas (<0.05) a escalas teóricas sugieren relación armónica.
+Ratios consistentes entre métodos (abs/range) indican robustez.

@@ -1,0 +1,40 @@
+ESTADÍSTICAS DE APOYOS  [pine-logs-Calculador de Magnitudes Armónicas (2)]
+Filas: 10000 | Rango: 2025-09-09 12:30:00 → 2026-04-05 20:00:00
+Parámetros: ventana_min=5 velas, rebote=10 velas
+============================================================
+
+── Apoyo en EMA10 (717 eventos) ──
+  Profundidad (dist precio → EMA10):
+    mediana = -0.35%
+    p10/p90 = -1.30% / -0.02%
+    p5/p95  = -1.62% / +0.05%
+    p25/p75 = -0.70% / -0.14%
+    min/max = -6.15% / +0.41%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 73.4%
+    mediana rebote     = +0.39%
+    p25/p75 rebote     = -0.02% / +0.95%
+
+── Apoyo en EMA55 (635 eventos) ──
+  Profundidad (dist precio → EMA55):
+    mediana = -0.51%
+    p10/p90 = -2.57% / +0.55%
+    p5/p95  = -3.39% / +0.92%
+    p25/p75 = -1.33% / +0.06%
+    min/max = -10.45% / +3.06%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 79.5%
+    mediana rebote     = +0.51%
+    p25/p75 rebote     = +0.11% / +1.09%
+
+── Apoyo en EMA200 (619 eventos) ──
+  Profundidad (dist precio → EMA200):
+    mediana = -0.84%
+    p10/p90 = -4.39% / +1.63%
+    p5/p95  = -5.72% / +2.48%
+    p25/p75 = -2.42% / +0.48%
+    min/max = -17.06% / +4.38%
+  Rebote 10 velas después:
+    tasa éxito (subió) = 80.0%
+    mediana rebote     = +0.50%
+    p25/p75 rebote     = +0.14% / +1.06%

@@ -1,0 +1,47 @@
+VALIDACIÓN DE HIPÓTESIS DE ESCALA  [pine-logs-Calculador de Magnitudes Armónicas (34)]
+======================================================================
+
+Hipótesis probadas:
+1. EMA55 ≈ 2 × EMA10   (escala ×2)
+2. EMA200 ≈ 3 × EMA55  (escala ×3)
+3. EMA200 ≈ 6 × EMA10  (escala ×6)
+4. EMA55 ≈ 1.618 × EMA10 (proporción áurea φ)
+5. EMA55 ≈ 1.414 × EMA10 (√2)
+
+── RESULTADOS ──
+55/10 ≈ 2.0: EMA55 ≈ 2 × EMA10
+  → Valor empírico: 2.851
+  → Diferencia: 0.851 (42.6% del valor esperado)
+  → ❌ NO CONFIRMADA (diferencia > 30%)
+
+55/10 ≈ 1.618: Proporción áurea φ
+  → Valor empírico: 2.851
+  → Diferencia: 1.233 (76.2% del valor esperado)
+  → ❌ NO CONFIRMADA (diferencia > 30%)
+
+55/10 ≈ 1.414: Raíz cuadrada de 2
+  → Valor empírico: 2.851
+  → Diferencia: 1.437 (101.7% del valor esperado)
+  → ❌ NO CONFIRMADA (diferencia > 30%)
+
+200/55 ≈ 3.0: EMA200 ≈ 3 × EMA55
+  → Valor empírico: 2.216
+  → Diferencia: 0.784 (26.1% del valor esperado)
+  → ⚠️  DÉBILMENTE (diferencia 20-30%)
+
+200/10 ≈ 6.0: EMA200 ≈ 6 × EMA10
+  → Valor empírico: 6.318
+  → Diferencia: 0.318 (5.3% del valor esperado)
+  → ✅ CONFIRMADA (diferencia < 10%)
+
+── CONCLUSIÓN GENERAL ──
+Hipótesis evaluadas: 5
+Hipótesis con diferencia < 20%: 1
+Tasa de confirmación: 20.0%
+❌ RELACIONES DE ESCALA NO CONFIRMADAS
+
+── IMPLICACIONES PARA INDICADOR ──
+Si se confirman relaciones de escala, el indicador podría:
+1. Usar parámetros escalados entre EMAs (ej: umbral_EMA55 = 2 × umbral_EMA10)
+2. Detectar anomalías cuando las relaciones se rompen
+3. Implementar validación cruzada entre niveles de EMA

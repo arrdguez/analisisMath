@@ -46,11 +46,7 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def hurst_rs(serie: np.ndarray) -> tuple[float, np.ndarray, np.ndarray]:
@@ -152,7 +148,7 @@ def plot_rs(resultados: dict, tf: str):
         ax.legend(fontsize=6)
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'hurst_{tf}_rs.png')
+    out = os.path.join(RESULTS, f'{tf}_hurst_rs.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -182,7 +178,7 @@ def write_valores(resultados: dict, df: pd.DataFrame, tf: str):
     for col, (H, _, _) in resultados.items():
         lines.append(f'  {col}:  {interpretar_h(H)}')
 
-    out = os.path.join(RESULTS, f'hurst_{tf}_valores.txt')
+    out = os.path.join(RESULTS, f'{tf}_hurst_valores.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -198,7 +194,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas')
 

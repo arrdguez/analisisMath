@@ -1,0 +1,32 @@
+ANÁLISIS DE FIBONACCI  [pine-logs-Calculador de Magnitudes Armónicas (40)]
+Filas: 3861 | Rango: 2010-10-06 21:00:00 → 2026-04-02 21:00:00
+============================================================
+
+Niveles Fibonacci de referencia: 0.236, 0.382, 0.500, 0.618, 0.786, 1.618
+
+── RATIOS DE TIEMPO (apoyo EMA10 → EMA55 → EMA200) ──
+  Secuencias encontradas: 287
+  Mediana del ratio:  0.7500
+  Media del ratio:    1.0242
+  p25/p75:            0.4179 / 1.3333
+  Nivel Fib más cercano a la mediana: 0.786  (distancia=0.0360)
+  Interpretación: si dist < 0.05 al nivel Fib, la proporción es notable
+
+── RATIOS DE AMPLITUD (valle/pico por EMA) ──
+  EMA10 (dist_p10):
+    Pares pico/valle: 287
+    Mediana ratio:    0.7128
+    p25/p75:          0.3412 / 1.3911
+    Fib más cercano:  0.786  (distancia=0.0732)
+
+  EMA55 (dist_p55):
+    Pares pico/valle: 248
+    Mediana ratio:    0.5202
+    p25/p75:          0.2351 / 1.5857
+    Fib más cercano:  0.5  (distancia=0.0202)
+
+  EMA200 (dist_p200):
+    Pares pico/valle: 239
+    Mediana ratio:    0.6707
+    p25/p75:          0.4244 / 1.4046
+    Fib más cercano:  0.618  (distancia=0.0527)

@@ -47,12 +47,8 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    """Extrae timeframe (1D, 4H, 1H) del nombre del archivo."""
-    name = os.path.basename(filename).upper()
-    for tf in ("1D", "4H", "1H"):
-        if tf in name:
-            return tf
-    return "UNK"
+    """Extrae el nombre base del archivo sin '_clean' ni extensión."""
+    return os.path.basename(filename).replace("_clean.csv", "").replace(".csv", "")
 
 
 def compute_ccf(x: np.ndarray, y: np.ndarray, max_lag: int = 100) -> tuple:
@@ -177,7 +173,7 @@ def plot_ccf(
         f"Lag óptimo = {best_lag} velas (corr={best_corr:.3f})",
     )
 
-    out = os.path.join(RESULTS, f"correlation_{tf}_ccf.png")
+    out = os.path.join(RESULTS, f"{tf}_correlation_ccf.png")
     plt.savefig(out, dpi=130, bbox_inches="tight", facecolor=BG_FIG)
     plt.close()
     print(f"  📊 {os.path.basename(out)}")
@@ -259,7 +255,7 @@ def plot_scatter(df: pd.DataFrame, tf: str, pearson_r: float):
         f"Pearson r = {pearson_r:.3f}  |  n = {len(x)} puntos",
     )
 
-    out = os.path.join(RESULTS, f"correlation_{tf}_scatter.png")
+    out = os.path.join(RESULTS, f"{tf}_correlation_scatter.png")
     plt.savefig(out, dpi=130, bbox_inches="tight", facecolor=BG_FIG)
     plt.close()
     print(f"  📊 {os.path.basename(out)}")
@@ -352,7 +348,7 @@ def plot_rolling_corr(df: pd.DataFrame, rolling_corr: pd.Series, tf: str):
     )
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f"correlation_{tf}_rolling.png")
+    out = os.path.join(RESULTS, f"{tf}_correlation_rolling.png")
     plt.savefig(out, dpi=130, bbox_inches="tight", facecolor=BG_FIG)
     plt.close()
     print(f"  📊 {os.path.basename(out)}")
@@ -463,7 +459,7 @@ def write_stats(
         f"  4. Fuerza relación: {'fuerte' if abs(pearson_r) > 0.5 else 'moderada' if abs(pearson_r) > 0.3 else 'débil'}",
     ]
 
-    out = os.path.join(RESULTS, f"correlation_{tf}_stats.txt")
+    out = os.path.join(RESULTS, f"{tf}_correlation_stats.txt")
     with open(out, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     print(f"  📄 {os.path.basename(out)}")
@@ -481,7 +477,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f"\n📂 {tf}  ←  {os.path.basename(path)}")
+        print(f"\n📂 {tf}")
 
         df = load(path)
         print(f"   {len(df)} filas con datos completos")

@@ -1,0 +1,79 @@
+ESTADÍSTICAS DESCRIPTIVAS — pine-logs-Calculador de Magnitudes Armónicas (24)
+Filas: 10000 | Rango: 1986-07-01 22:00:00 → 2026-04-01 22:00:00
+============================================================
+
+── Distancias precio → EMA (%) ──
+  dist_p10:
+    media   = +0.115%
+    std     = 1.433
+    p5/p95  = -2.050 / +2.381
+    p25/p75 = -0.660 / +0.908
+    mediana = +0.061
+    min/max = -10.738 / +13.056
+
+  dist_p55:
+    media   = +0.708%
+    std     = 3.459
+    p5/p95  = -4.385 / +6.796
+    p25/p75 = -1.386 / +2.637
+    mediana = +0.284
+    min/max = -15.033 / +20.384
+
+  dist_p200:
+    media   = +2.509%
+    std     = 6.921
+    p5/p95  = -7.152 / +14.784
+    p25/p75 = -2.278 / +6.834
+    mediana = +1.565
+    min/max = -21.302 / +38.344
+
+── Distancias entre EMAs (%) ──
+  dist_10_55:
+    media   = +0.578%
+    std     = 2.598
+    p5/p95  = -3.351 / +5.228
+    p25/p75 = -1.017 / +2.118
+    mediana = +0.220
+    min/max = -8.667 / +12.243
+
+  dist_55_200:
+    media   = +1.713%
+    std     = 4.362
+    p5/p95  = -4.559 / +9.340
+    p25/p75 = -1.475 / +4.526
+    mediana = +1.327
+    min/max = -10.425 / +17.225
+
+── Ratio Armónico ──
+  ratio_armonico (valores extremos recortados a ±5):
+    media   = +0.305
+    std     = 1.425
+    p5/p95  = -1.830 / +2.347
+    p25/p75 = -0.073 / +0.747
+    mediana = +0.349
+
+
+── Pendientes de EMAs (%) ──
+  slope10:
+    media   = +0.139%
+    std     = 1.365
+    p5/p95  = -1.891 / +2.379
+    p25/p75 = -0.656 / +0.896
+    mediana = +0.083
+    min/max = -7.283 / +9.913
+
+  slope55:
+    media   = +0.134%
+    std     = 0.621
+    p5/p95  = -0.785 / +1.235
+    p25/p75 = -0.243 / +0.487
+    mediana = +0.052
+    min/max = -2.287 / +3.507
+
+  slope200:
+    media   = +0.127%
+    std     = 0.345
+    p5/p95  = -0.354 / +0.733
+    p25/p75 = -0.112 / +0.340
+    mediana = +0.081
+    min/max = -0.987 / +1.741

@@ -1,0 +1,38 @@
+ANÁLISIS FFT — CICLOS DOMINANTES  [pine-logs-Calculador de Magnitudes Armónicas (33)]
+Filas: 5407 | Rango: 2014-10-06 17:30:00 → 2026-04-01 17:30:00
+============================================================
+
+  dist_p10:
+    #1  5407 velas  (11.56% de la energía)
+    #2  31 velas  (1.28% de la energía)
+    #3  49 velas  (1.23% de la energía)
+    #4  2704 velas  (1.22% de la energía)
+    #5  1802 velas  (0.91% de la energía)
+
+  dist_p55:
+    #1  1802 velas  (6.53% de la energía)
+    #2  1352 velas  (3.97% de la energía)
+    #3  5407 velas  (3.57% de la energía)
+    #4  180 velas  (3.53% de la energía)
+    #5  318 velas  (3.43% de la energía)
+
+  dist_p200:
+    #1  1802 velas  (20.82% de la energía)
+    #2  1352 velas  (11.90% de la energía)
+    #3  2704 velas  (9.97% de la energía)
+    #4  901 velas  (6.78% de la energía)
+    #5  772 velas  (6.55% de la energía)
+
+  dist_10_55:
+    #1  5407 velas  (10.48% de la energía)
+    #2  1802 velas  (7.56% de la energía)
+    #3  1352 velas  (4.66% de la energía)
+    #4  180 velas  (3.94% de la energía)
+    #5  318 velas  (3.93% de la energía)
+
+  dist_55_200:
+    #1  1802 velas  (26.97% de la energía)
+    #2  1352 velas  (15.39% de la energía)
+    #3  2704 velas  (12.98% de la energía)
+    #4  901 velas  (8.78% de la energía)
+    #5  772 velas  (8.19% de la energía)

@@ -1,0 +1,74 @@
+//@version=6
+indicator("Oscilador de Magnitudes Armónicas V2.1", overlay = false, precision = 2)
+
+// ── REGLAS DEL SCRIPT ───────────────────────────────────────────────────────
+// 1. PROPÓSITO: Descriptor de "Estrés Armónico" sensible al Timeframe.
+// 2. ESCALA: Normalizada. 1.0 es el extremo histórico del TF actual.
+// 3. ACTUALIZACIÓN: V2.1 - Añadido soporte real para 1H y 4H.
+
+// ── CONSTANTES REALES (DATA DNA) ────────────────────────────────────────────
+
+// Perfil 1D (BTC/USD)
+d10_1d_p5 = -6.27, d10_1d_p25 = -1.21, d10_1d_p75 = 3.10, d10_1d_p95 = 6.45
+d55_1d_p5 = -11.47, d55_1d_p25 = -4.03, d55_1d_p75 = 8.92, d55_1d_p95 = 15.30
+
+// Perfil 4H (BTC/USD)
+d10_4h_p5 = -2.30, d10_4h_p25 = -0.41, d10_4h_p75 = 1.15, d10_4h_p95 = 2.45
+d55_4h_p5 = -4.09, d55_4h_p25 = -1.60, d55_4h_p75 = 3.20, d55_4h_p95 = 6.80
+
+// Perfil 1H (BTC/USD)
+d10_1h_p5 = -0.93, d10_1h_p25 = -0.20, d10_1h_p75 = 0.58, d10_1h_p95 = 1.30
+d55_1h_p5 = -1.72, d55_1h_p25 = 0.08, d55_1h_p75 = 0.85, d55_1h_p95 = 2.15
+
+// ── INPUTS ──────────────────────────────────────────────────────────────────
+//group "Calibración"
+mode_input = input.string("Auto", "Perfil de Datos", options = ["Auto", "1D", "4H", "1H"], group = "Calibración")
+show_55 = input.bool(true, "Mostrar Estrés EMA55 (Lenta)", group = "Calibración")
+
+// ── DETECCIÓN DE TIMEFRAME ──────────────────────────────────────────────────
+is_1d = (mode_input == "Auto" and timeframe.isdaily) or mode_input == "1D"
+is_4h = (mode_input == "Auto" and timeframe.isintraday and timeframe.multiplier == 240) or mode_input == "4H"
+is_1h = (mode_input == "Auto" and timeframe.isintraday and timeframe.multiplier <= 60) or mode_input == "1H"
+
+// Selección de constantes según TF
+p10_p5  = is_1d ? d10_1d_p5  : (is_4h ? d10_4h_p5 : d10_1h_p5)
+p10_p25 = is_1d ? d10_1d_p25 : (is_4h ? d10_4h_p25 : d10_1h_p25)
+p10_p75 = is_1d ? d10_1d_p75 : (is_4h ? d10_4h_p75 : d10_1h_p75)
+p10_p95 = is_1d ? d10_1d_p95 : (is_4h ? d10_4h_p95 : d10_1h_p95)
+
+p55_p5  = is_1d ? d55_1d_p5  : (is_4h ? d55_4h_p5 : d55_1h_p5)
+p55_p25 = is_1d ? d55_1d_p25 : (is_4h ? d55_4h_p25 : d55_1h_p25)
+p55_p75 = is_1d ? d55_1d_p75 : (is_4h ? d55_4h_p75 : d55_1h_p75)
+p55_p95 = is_1d ? d55_1d_p95 : (is_4h ? d55_4h_p95 : d55_1h_p95)
+
+// ── FUNCIÓN DE NORMALIZACIÓN ───────────────────────────────────────────────
+f_normalize(dist, p5, p25, p75, p95) =>
+    float score = 0.0
+    if dist >= 0
+        score := dist <= p75 ? (dist / p75) * 0.5 : 0.5 + ((dist - p75) / (p95 - p75)) * 0.5
+    else
+        score := dist >= p25 ? (dist / math.abs(p25)) * 0.5 : -0.5 - ((math.abs(dist) - math.abs(p25)) / (math.abs(p5) - math.abs(p25))) * 0.5
+    math.max(math.min(score, 1.2), -1.2)
+
+// ── CÁLCULOS ────────────────────────────────────────────────────────────────
+e10 = ta.ema(close, 10), e55 = ta.ema(close, 55)
+dist10 = (close - e10) / e10 * 100
+dist55 = (close - e55) / e55 * 100
+
+score10 = f_normalize(dist10, p10_p5, p10_p25, p10_p75, p10_p95)
+score55 = f_normalize(dist55, p55_p5, p55_p25, p55_p75, p55_p95)
+
+// ── VISUALIZACIÓN ──────────────────────────────────────────────────────────
+hline(1.0,  "Extremo Alto", color = color.new(color.red, 40), linestyle = hline.style_dashed)
+hline(0.5,  "Zona Techo",   color = color.new(color.gray, 60), linestyle = hline.style_dotted)
+hline(0.0,  "Equilibrio",   color = color.new(color.white, 80))
+hline(-0.5, "Zona Suelo",   color = color.new(color.gray, 60), linestyle = hline.style_dotted)
+hline(-1.0, "Extremo Bajo", color = color.new(color.blue, 40), linestyle = hline.style_dashed)
+
+plot(score10, "Estrés EMA10", color = color.blue, linewidth = 2)
+plot(show_55 ? score55 : na, "Estrés EMA55", color = color.new(color.orange, 30), linewidth = 1)
+
+// Tabla de Perfil activo
+var table info = table.new(position.top_right, 1, 1, bgcolor = color.new(color.black, 70))
+if barstate.islast
+    table.cell(info, 0, 0, "Perfil: " + (is_1d ? "1D" : (is_4h ? "4H" : "1H")), text_color = color.white, text_size = size.small)

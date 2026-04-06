@@ -1,0 +1,33 @@
+ANÁLISIS DE HILBERT  [pine-logs-Calculador de Magnitudes Armónicas (42)]
+Filas: 10000 | Rango: 2024-08-22 13:00:00 → 2026-04-03 20:00:00
+============================================================
+
+Qué mide:
+  Envolvente  → amplitud de la oscilación en cada momento
+  Período     → cuántas velas dura el ciclo en cada momento
+  (Si el período cambia mucho: el ciclo NO es constante en el tiempo)
+============================================================
+
+── EMA10 (dist_p10) ──
+  Amplitud media:    0.200%
+  Amplitud std:      0.182%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   13.1 velas
+  Período p25/p75:   7.7 / 25.3 velas
+  Rango intercuartil del período: 17.6 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)
+
+── EMA55 (dist_p55) ──
+  Amplitud media:    0.485%
+  Amplitud std:      0.384%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   32.8 velas
+  Período p25/p75:   17.7 / 69.3 velas
+  Rango intercuartil del período: 51.6 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)
+
+── EMA200 (dist_p200) ──
+  Amplitud media:    0.828%
+  Amplitud std:      0.644%  (qué tanto varía la amplitud — mayor std = más irregular)
+  Período mediana:   58.1 velas
+  Período p25/p75:   29.5 / 130.7 velas
+  Rango intercuartil del período: 101.2 velas
+  (Rango amplio = ciclo variable; rango estrecho = ciclo estable)

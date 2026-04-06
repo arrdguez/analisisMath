@@ -55,11 +55,7 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def analizar_hilbert(serie: np.ndarray) -> dict:
@@ -126,7 +122,7 @@ def plot_envolvente(df: pd.DataFrame, resultados: dict, tf: str):
                         f'(envolvente = techo/suelo de la onda)')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'hilbert_{tf}_envolvente.png')
+    out = os.path.join(RESULTS, f'{tf}_hilbert_envolvente.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -168,7 +164,7 @@ def plot_frecuencia(df: pd.DataFrame, resultados: dict, tf: str):
                         f'— línea sube = ciclo más lento, baja = más rápido')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'hilbert_{tf}_frecuencia.png')
+    out = os.path.join(RESULTS, f'{tf}_hilbert_frecuencia.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -205,7 +201,7 @@ def write_resumen(resultados: dict, df: pd.DataFrame, tf: str):
             '',
         ]
 
-    out = os.path.join(RESULTS, f'hilbert_{tf}_resumen.txt')
+    out = os.path.join(RESULTS, f'{tf}_hilbert_resumen.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -221,7 +217,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas')
 

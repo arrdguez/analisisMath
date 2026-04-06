@@ -1,0 +1,57 @@
+//@version=6
+// ─────────────────────────────────────────────────────────────────────────────
+// Calculador de Magnitudes Armónicas — Exportador CSV
+// ─────────────────────────────────────────────────────────────────────────────
+// PROPÓSITO: Generar el log que parse_csv.py limpia y convierte.
+// FORMATO DE SALIDA (cada barra):
+//   close;ema10;ema55;ema200;dist_p10;dist_p55;dist_p200;slope10;slope55;slope200;dist_10_55;dist_55_200
+// USO:
+//   1. Aplicar al gráfico (BTC/USD o cualquier activo).
+//   2. Ir al panel "Pine Logs" → exportar como CSV.
+//   3. Copiar el CSV a la carpeta data/ del proyecto.
+//   4. Ejecutar: python parse_csv.py
+// ─────────────────────────────────────────────────────────────────────────────
+indicator("Calculador de Magnitudes Armónicas", overlay=true)
+
+// ── EMAs ─────────────────────────────────────────────────────────────────────
+ema10  = ta.ema(close, 10)
+ema55  = ta.ema(close, 55)
+ema200 = ta.ema(close, 200)
+
+// ── Distancias % precio vs EMA ────────────────────────────────────────────────
+dist_p10  = (close - ema10)  / ema10  * 100
+dist_p55  = (close - ema55)  / ema55  * 100
+dist_p200 = (close - ema200) / ema200 * 100
+
+// ── Pendientes (slope = diferencia de 1 barra de la propia distancia) ─────────
+slope10  = dist_p10  - dist_p10 [1]
+slope55  = dist_p55  - dist_p55 [1]
+slope200 = dist_p200 - dist_p200[1]
+
+// ── Distancias entre EMAs ─────────────────────────────────────────────────────
+dist_10_55  = dist_p10 - dist_p55
+dist_55_200 = dist_p55 - dist_p200
+
+// ── LOG (una línea por barra, separado por ";") ───────────────────────────────
+// parse_csv.py espera exactamente este orden de 12 campos:
+//   close;ema10;ema55;ema200;dist_p10;dist_p55;dist_p200;
+//   slope10;slope55;slope200;dist_10_55;dist_55_200
+log.info(
+     str.tostring(close,    "#.####") + ";" +
+     str.tostring(ema10,    "#.####") + ";" +
+     str.tostring(ema55,    "#.####") + ";" +
+     str.tostring(ema200,   "#.####") + ";" +
+     str.tostring(dist_p10,  "#.####") + ";" +
+     str.tostring(dist_p55,  "#.####") + ";" +
+     str.tostring(dist_p200, "#.####") + ";" +
+     str.tostring(slope10,   "#.####") + ";" +
+     str.tostring(slope55,   "#.####") + ";" +
+     str.tostring(slope200,  "#.####") + ";" +
+     str.tostring(dist_10_55,  "#.####") + ";" +
+     str.tostring(dist_55_200, "#.####")
+     )
+
+// ── Plot visual mínimo (solo para que TradingView no lo rechace) ──────────────
+plot(ema10,  color=color.new(color.blue,   40), linewidth=1, title="EMA10")
+plot(ema55,  color=color.new(color.orange, 40), linewidth=1, title="EMA55")
+plot(ema200, color=color.new(color.green,  40), linewidth=1, title="EMA200")

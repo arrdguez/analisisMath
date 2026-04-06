@@ -42,11 +42,7 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def detectar_apoyos(df: pd.DataFrame, col: str,
@@ -134,7 +130,7 @@ def plot_profundidades(df: pd.DataFrame, apoyos: dict, tf: str):
                   title=f'Distribución de profundidades — {label}')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'apoyo_{tf}_detalle.png')
+    out = os.path.join(RESULTS, f'{tf}_apoyo_detalle.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -178,7 +174,7 @@ def plot_rebotes(apoyos: dict, tf: str):
                         f'mediana rebote: {data.median():.1f}%')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'apoyo_{tf}_rebote.png')
+    out = os.path.join(RESULTS, f'{tf}_apoyo_rebote.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -223,7 +219,7 @@ def write_stats(apoyos: dict, df: pd.DataFrame, tf: str):
             '',
         ]
 
-    out = os.path.join(RESULTS, f'apoyo_{tf}_stats.txt')
+    out = os.path.join(RESULTS, f'{tf}_apoyo_stats.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -239,7 +235,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas con datos completos')
 

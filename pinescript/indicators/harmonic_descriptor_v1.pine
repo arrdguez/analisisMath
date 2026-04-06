@@ -1,0 +1,82 @@
+//@version=6
+indicator("Descriptor de Magnitudes Armónicas V1.2", overlay = true, max_labels_count = 500)
+
+// ── REGLAS DEL SCRIPT ───────────────────────────────────────────────────────
+// 1. PROPÓSITO: Descriptor minimalista. Menos ruido visual, más foco en el precio.
+// 2. VISUAL: Fondo tenue (bgcolor) solo cuando hay zona activa. Sin nubes permanentes.
+// 3. VERSIONADO: V1.2 (Minimalista).
+
+// ── CONSTANTES REALES (BTC/USD) ─────────────────────────────────────────────
+d10_1d_p5 = -6.27, d10_1d_p25 = -1.21, d10_1d_p75 = 3.10, d10_1d_p95 = 6.45, d10_1d_per = 14
+d55_1d_p5 = -11.47, d55_1d_p25 = -4.03, d55_1d_p75 = 8.92, d55_1d_p95 = 15.30, d55_1d_per = 46
+
+d10_4h_p5 = -2.30, d10_4h_p25 = -0.41, d10_4h_p75 = 1.15, d10_4h_p95 = 2.45, d10_4h_per = 14
+d55_4h_p5 = -4.09, d55_4h_p25 = -1.60, d55_4h_p75 = 3.20, d55_4h_p95 = 6.80, d55_4h_per = 42
+
+// ── INPUTS ──────────────────────────────────────────────────────────────────
+group "Calibración"
+mode_input = input.string("Auto", "Perfil", options = ["Auto", "1D", "4H", "Manual"], group = "Calibración")
+
+group "Visualización (Zen)"
+show_emas   = input.bool(true,  "Mostrar EMAs", group = "Visualización (Zen)")
+show_bg     = input.bool(true,  "Resaltar Fondo en Zona", group = "Visualización (Zen)")
+show_table  = input.bool(true,  "Mostrar Tabla Resumen", group = "Visualización (Zen)")
+opacity     = input.int(93,     "Transparencia Fondo (0-100)", minval = 0, maxval = 100, group = "Visualización (Zen)")
+
+// ── LÓGICA DE SELECCIÓN ─────────────────────────────────────────────────────
+is_1d = (mode_input == "Auto" and timeframe.isdaily) or mode_input == "1D"
+is_4h = (mode_input == "Auto" and timeframe.isintraday and timeframe.multiplier == 240) or mode_input == "4H"
+
+h10_p5 = is_1d ? d10_1d_p5 : (is_4h ? d10_4h_p5 : d10_1d_p5)
+h10_p25 = is_1d ? d10_1d_p25 : (is_4h ? d10_4h_p25 : d10_1d_p25)
+h10_p75 = is_1d ? d10_1d_p75 : (is_4h ? d10_4h_p75 : d10_1d_p75)
+h10_p95 = is_1d ? d10_1d_p95 : (is_4h ? d10_4h_p95 : d10_1d_p95)
+h10_per = is_1d ? d10_1d_per : (is_4h ? d10_4h_per : d10_1d_per)
+
+h55_p5 = is_1d ? d55_1d_p5 : (is_4h ? d55_4h_p5 : d55_1d_p5)
+h55_p25 = is_1d ? d55_1d_p25 : (is_4h ? d55_4h_p25 : d55_1d_p25)
+h55_p75 = is_1d ? d55_1d_p75 : (is_4h ? d55_4h_p75 : d55_1d_p75)
+h55_p95 = is_1d ? d55_1d_p95 : (is_4h ? d55_4h_p95 : d55_1d_p95)
+h55_per = is_1d ? d55_1d_per : (is_4h ? d55_4h_per : d55_1d_per)
+
+// ── CÁLCULOS ────────────────────────────────────────────────────────────────
+e10 = ta.ema(close, 10), e55 = ta.ema(close, 55)
+dist10 = (close - e10) / e10 * 100
+dist55 = (close - e55) / e55 * 100
+
+// Detección de estados
+in_10_suelo = dist10 <= h10_p25 and dist10 >= h10_p5
+in_10_techo = dist10 >= h10_p75 and dist10 <= h10_p95
+in_55_suelo = dist55 <= h55_p25 and dist55 >= h55_p5
+in_55_techo = dist55 >= h55_p75 and dist55 <= h55_p95
+
+// ── VISUALIZACIÓN MINIMALISTA ───────────────────────────────────────────────
+// EMAs discretas
+plot(show_emas ? e10 : na, color = color.new(color.blue, 40), title = "EMA 10")
+plot(show_emas ? e55 : na, color = color.new(color.orange, 40), title = "EMA 55")
+
+// Resaltado de fondo (solo si está en zona)
+bgcolor(show_bg and in_10_techo ? color.new(color.red, opacity) : na, title = "Fondo Techo 10")
+bgcolor(show_bg and in_10_suelo ? color.new(color.blue, opacity) : na, title = "Fondo Suelo 10")
+bgcolor(show_bg and in_55_techo ? color.new(color.maroon, opacity) : na, title = "Fondo Techo 55")
+bgcolor(show_bg and in_55_suelo ? color.new(color.orange, opacity) : na, title = "Fondo Suelo 55")
+
+// Reloj de fase (triángulos muy pequeños)
+is_ext10 = ta.lowest(dist10, 5) == dist10[2] or ta.highest(dist10, 5) == dist10[2]
+var int bars10 = 0
+bars10 := is_ext10 ? 2 : bars10 + 1
+
+plotshape(is_ext10, title = "Fase", style = shape.circle, location = location.top, color = color.new(color.gray, 50), size = size.tiny)
+
+// Tabla de Estado (muy compacta)
+var table info = table.new(position.bottom_right, 2, 3, bgcolor = color.new(color.black, 70), border_width = 1)
+if show_table and barstate.islast
+    state10 = in_10_techo ? "TECHO" : (in_10_suelo ? "SUELO" : "–")
+    state55 = in_55_techo ? "TECHO" : (in_55_suelo ? "SUELO" : "–")
+    
+    table.cell(info, 0, 0, "EMA", text_color = color.white, text_size = size.small)
+    table.cell(info, 1, 0, "Estado", text_color = color.white, text_size = size.small)
+    table.cell(info, 0, 1, "10", text_color = color.blue)
+    table.cell(info, 1, 1, state10 + " (" + str.tostring(bars10) + "/" + str.tostring(h10_per) + "v)", text_color = color.white)
+    table.cell(info, 0, 2, "55", text_color = color.orange)
+    table.cell(info, 1, 2, state55, text_color = color.white)

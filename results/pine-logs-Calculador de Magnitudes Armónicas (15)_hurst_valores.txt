@@ -1,0 +1,20 @@
+EXPONENTE DE HURST  [pine-logs-Calculador de Magnitudes Armónicas (15)]
+Filas: 5417 | Rango: 1894-04-30 14:30:00 → 2026-03-30 13:30:00
+============================================================
+
+Interpretación de H:
+  H > 0.65  → Persistente fuerte   (la serie continúa su dirección)
+  H 0.55-0.65 → Persistente moderada (algo de memoria)
+  H 0.45-0.55 → Casi aleatoria       (sin memoria clara)
+  H 0.35-0.45 → Anti-persistente     (tiende a revertir)
+  H < 0.35  → Anti-persistente fuerte (revierte muy seguido)
+
+NOTA: Se aplica a las DISTANCIAS, no al precio crudo.
+      El precio crudo tiene tendencia que contaminaría el resultado.
+============================================================
+
+  dist_p10:  H=0.799 → Persistente fuerte   — la serie tiende a continuar su dirección
+  dist_p55:  H=0.943 → Persistente fuerte   — la serie tiende a continuar su dirección
+  dist_p200:  H=0.980 → Persistente fuerte   — la serie tiende a continuar su dirección
+  dist_10_55:  H=0.936 → Persistente fuerte   — la serie tiende a continuar su dirección
+  dist_55_200:  H=0.983 → Persistente fuerte   — la serie tiende a continuar su dirección

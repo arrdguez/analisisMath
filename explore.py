@@ -49,11 +49,7 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def estilo_ax(ax, xlabel='', ylabel='', title=''):
@@ -146,7 +142,7 @@ def plot_distancias(df: pd.DataFrame, tf: str):
               ylabel='Precio (USD)',
               title='Precio de cierre (referencia temporal)')
 
-    out = os.path.join(RESULTS, f'explore_{tf}_distancias.png')
+    out = os.path.join(RESULTS, f'{tf}_explore_distancias.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -208,7 +204,7 @@ def plot_ratio(df: pd.DataFrame, tf: str):
               title='Ratio Armónico = dist_10_55 / dist_55_200  (recortado a ±3)')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'explore_{tf}_ratio.png')
+    out = os.path.join(RESULTS, f'{tf}_explore_ratio.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -247,7 +243,7 @@ def write_stats(df: pd.DataFrame, tf: str):
     for col in ['slope10', 'slope55', 'slope200']:
         lines.append(stats_block(df, col))
 
-    out = os.path.join(RESULTS, f'explore_{tf}_stats.txt')
+    out = os.path.join(RESULTS, f'{tf}_explore_stats.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -262,7 +258,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas con datos completos')
         plot_distancias(df, tf)

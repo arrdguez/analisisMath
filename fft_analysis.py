@@ -34,11 +34,7 @@ def load(path):
 
 
 def timeframe_label(filename):
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def fft_top_cycles(signal, top_n=TOP_N):
@@ -120,7 +116,7 @@ def plot_espectro(df, tf):
                   title=f'{label}  —  top ciclos: {top_label}')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'fft_{tf}_espectro.png')
+    out = os.path.join(RESULTS, f'{tf}_fft_espectro.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -143,7 +139,7 @@ def write_ciclos(df, tf):
         for i, (ciclo, amplitud, fraccion) in enumerate(top, 1):
             lines.append(f'    #{i}  {ciclo} velas  ({fraccion:.2f}% de la energía)')
         lines.append('')
-    out = os.path.join(RESULTS, f'fft_{tf}_ciclos.txt')
+    out = os.path.join(RESULTS, f'{tf}_fft_ciclos.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -158,7 +154,7 @@ def main():
         return
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas')
         plot_espectro(df, tf)

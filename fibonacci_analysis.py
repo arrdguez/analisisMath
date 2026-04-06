@@ -51,11 +51,7 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    name = os.path.basename(filename).upper()
-    for tf in ('1D', '4H', '1H'):
-        if tf in name:
-            return tf
-    return 'UNK'
+    return os.path.basename(filename).replace('_clean.csv', '').replace('.csv', '')
 
 
 def detectar_extremos(serie: np.ndarray, ventana: int = VENTANA):
@@ -170,7 +166,7 @@ def plot_tiempos(ratios: list[float], tf: str):
               title=f'Ratios de tiempo entre apoyos consecutivos  [{tf}]\n'
                     f'Mediana={med:.3f}  —  ¿se acumula cerca de 0.618 o 0.786?')
 
-    out = os.path.join(RESULTS, f'fibonacci_{tf}_tiempos.png')
+    out = os.path.join(RESULTS, f'{tf}_fibonacci_tiempos.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -217,7 +213,7 @@ def plot_amplitudes(ratios_amp: dict[str, list[float]], tf: str):
                         f' (dist={dist_fib:.3f})')
 
     plt.tight_layout()
-    out = os.path.join(RESULTS, f'fibonacci_{tf}_amplitudes.png')
+    out = os.path.join(RESULTS, f'{tf}_fibonacci_amplitudes.png')
     plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=BG_FIG)
     plt.close()
     print(f'  📊 {os.path.basename(out)}')
@@ -275,7 +271,7 @@ def write_stats(ratios_tiempo: list[float],
             '',
         ]
 
-    out = os.path.join(RESULTS, f'fibonacci_{tf}_stats.txt')
+    out = os.path.join(RESULTS, f'{tf}_fibonacci_stats.txt')
     with open(out, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     print(f'  📄 {os.path.basename(out)}')
@@ -291,7 +287,7 @@ def main():
 
     for path in clean_files:
         tf = timeframe_label(path)
-        print(f'\n📂 {tf}  ←  {os.path.basename(path)}')
+        print(f'\n📂 {tf}')
         df = load(path)
         print(f'   {len(df)} filas')
 

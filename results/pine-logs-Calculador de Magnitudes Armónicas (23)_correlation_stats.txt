@@ -1,0 +1,31 @@
+ANÁLISIS DE CORRELACIÓN  [pine-logs-Calculador de Magnitudes Armónicas (23)]
+Filas: 2476 | Rango: 1978-10-22 22:00:00 → 2026-03-29 22:00:00
+============================================================
+
+── CORRELACIÓN SINCRÓNICA (lag = 0) ──
+  Pearson r   = 0.6815
+  Valor p     = 0.0000e+00
+  Interpretación:
+    • Correlación FUERTE (0.5-0.7)
+    • Estadísticamente SIGNIFICATIVA (p < 0.05)
+
+── CORRELACIÓN CRUZADA (desfase óptimo) ──
+  Lag óptimo  = -29 velas
+  Correlación en lag óptimo = 0.7918
+  Interpretación:
+    • dist_55_200 PRECEDE a dist_10_55 por 29 velas
+    • Mejor correlación con desfase que sincrónica
+
+── RELACIÓN LINEAL (regresión) ──
+  Pendiente   = 0.3905
+  Intercepto  = -0.2495
+  Ecuación: dist_10_55 = 0.3905 × dist_55_200 + -0.2495
+
+Interpretación de la pendiente:
+    • dist_10_55 responde ATENUANDO los movimientos de dist_55_200 (pendiente < 1)
+
+── RESUMEN PARA INDICADOR ──
+  1. Correlación sincrónica: SÍ
+  2. Desfase óptimo: -29 velas
+  3. Relación: dist_10_55 ≈ 0.39 × dist_55_200
+  4. Fuerza relación: fuerte

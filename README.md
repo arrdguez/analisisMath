@@ -282,3 +282,7 @@ pip install pandas matplotlib scipy
 > **Nota sobre extensiones:** El proyecto está **funcionalmente completo** con 11 scripts que cubren >90% del plan original. Las extensiones (Cadenas de Markov, Dimensión fractal) son análisis matemáticos avanzados que pueden implementarse posteriormente para profundizar en transiciones entre estados y autosimilaridad del patrón.
 
 > **Documentación teórica:** Para entender los métodos matemáticos utilizados, consulta `doc/TEORIA_REFERENCIAS.md` (explicaciones agnósticas con enlaces a Wikipedia).
+
+
+No quiero que me digas lo que se ve con los ojos, , quiero que partiendo de estos ciclos extraer datos que me ayuden a crear un indicador y luego con ese indicador tener una idea cuantitativa probabilistica cualitatiba y descriptiva del mercado al momento de mirarlo en base a algo que ya sabemos y que rpreviamente se calculo.
+Pienso usarlo asi: ya hice un estudio historico (lo que ya hacemos), no lo tengo que hacer todos los dias si acaso una vez mensual o semanal. Con eso obtuvimos unos datos contantes frecuencias, probabilidades etc coeficientes (determinar cual nos sirve y como usarlo). Luego generar un reporte de cada uno (ya se hace), uno en pdf que agrupe a todos y explique muy bien todo (por hacer) y luego extraer manualmente coeficientes, constantes etc etc etc que requerimos y colocarlo como parametrso del indicador (por hacer) que nos dirá algo o hara visual algo (por hacer) los graficos recuerda q son par aque el ojo vea mas facil las cosa

@@ -72,12 +72,9 @@ def load(path: str) -> pd.DataFrame:
 
 
 def timeframe_label(filename: str) -> str:
-    """Extrae timeframe (1D, 4H, 1H) del nombre del archivo."""
-    name = os.path.basename(filename).upper()
-    for tf in ("1D", "4H", "1H"):
-        if tf in name:
-            return tf
-    return "UNK"
+    """Extrae el identificador base del archivo."""
+    base = os.path.basename(filename)
+    return base.replace("_clean.csv", "").replace(".csv", "")
 
 
 def calculate_ratios(df: pd.DataFrame) -> dict:
