@@ -12,12 +12,22 @@ Soporta:
 import os
 import pandas as pd
 import numpy as np
+import argparse
+from pathlib import Path
 
 # ── Configuración ─────────────────────────────────────────────────────────────
-BASE_DIR    = os.path.dirname(__file__)
-DATA_DIR    = os.path.join(BASE_DIR, 'data')
-RESULTS_DIR = os.path.join(BASE_DIR, 'results')
+def get_args():
+    parser = argparse.ArgumentParser(description="Limpieza de CSV de TradingView")
+    parser.add_argument("--data", type=str, default="data", help="Carpeta de entrada")
+    parser.add_argument("--out", type=str, default="results", help="Carpeta de salida")
+    return parser.parse_args()
+
+args = get_args()
+DATA_DIR    = Path(args.data)
+RESULTS_DIR = Path(args.out)
 SUFFIX_OUT  = '_clean.csv'
+
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Columnas esperadas en el orden del indicador
 COLUMNS_TARGET = [
